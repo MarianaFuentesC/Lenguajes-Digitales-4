@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estado 2 — Grid Básico (para completar en clase)</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+body.dark-mode {
+  background-color: #333;
+}
+    /* ==========================================
+       ESTADO 2 — Grid Básico (SIN RESOLVER a propósito)
+       Este es el punto de partida para escribirlo en vivo en clase.
+       Sigue los TODO en orden — cada uno agrega UNA propiedad de la
+       tabla "Propiedades del contenedor" del recurso de Grid/Flexbox
+       (semana_03_recurso_css_grid_flexbox_tailwind.md).
+    ========================================== */
+    .grid-container {
+      /* TODO 1: activa Grid en este contenedor.
+         Propiedad: display
+         Valor: grid
+      */
+      
+      display: grid ;
+      
+      /* TODO 2: define 3 columnas de 200px cada una.
+         Propiedad: grid-template-columns
+         Pista: puedes escribir "200px 200px 200px" a mano,
+         o usar el atajo repeat(3, 200px) — ambos hacen lo mismo.
+      */
+      grid-template-columns: 100px 2fr 1fr;
+      
+      /* TODO 3: agrega espacio entre las celdas, sin usar márgenes.
+         Propiedad: gap
+         Valor sugerido: 15px
+      */
+      
+       gap:10px;
+      
+      @media (min-width: 500px) {
+      .grid-item {
+        background-color: black; 
+        }
+       }
+      
+       @media (min-width: 700px) {
+      .grid-item {
+        border-radius: 50px;
+        background-color: red; 
+        }
+       }
+       @media (min-width: 700px) {
+      .grid-item2 {
+        border-radius: 50px;
+        background-color: rgb(77, 59, 59); 
+        }
+       }
+
+     
+      background-color: #030C38;
+      padding: 15px;
+      border-radius: 8px;
+    }
+
+    .grid-item {
+      background-color: #9C6056;
+      color: white;
+      padding: 30px;
+      text-align: center;
+      font-size: 1.5rem;
+      border-radius: 6px;
+    }
+    .grid-item2 {
+      background-color: #58180d;
+      color: white;
+      padding: 30px;
+      text-align: center;
+      font-size: 1.5rem;
+      border-radius: 6px;
+    }
+    .grid-item-3 {
+      background-color: #145a32;
+      color: white;
+      padding: 30px;
+      text-align: center;
+      font-size: 1.5rem;
+      border-radius: 6px;
+    }
+
+
+    /* TODO 4 (opcional, para quien termine antes): alinea el
+       contenido de cada celda al centro verticalmente.
+       Propiedad: align-items (va en .grid-container, no en .grid-item)
+       Valor: center
+    */
+  </style>
+</head>
+<body>
+  <h1>Mi Primer Grid</h1>
+  <p style="margin: 20px 0;">Grid con 3 columnas de 200px cada una — completa los TODO del CSS.</p>
+
+  <div class="grid-container">
+    <div class="grid-item">1</div>
+    <div class="grid-item">2</div>
+    <div class="grid-item">3</div>
+    <div class="grid-item">4</div>
+    <div class="grid-item">5</div>
+    <div class="grid-item">6</div>
+    <div class="grid-item">7</div>
+    <div id="item8" class="grid-item">8</div>
+    <div id="demo" class="grid-item">9</div>
+  </div>
+
+ 
+
+  <button id="boton">Botón</button>
+  <button id="boton2">Botón</button>
+
+   <div id="caja2" class="grid-container">
+    <div class="grid-item">A</div>
+    <div class="grid-item">B</div>
+    <div class="grid-item">C</div>
+  </div>
+
+  <div id="caja3" class="grid-container">
+    <div class="grid-item-3">D</div>
+    <div class="grid-item-3">E</div>
+    <div class="grid-item-3">F</div>
+  </div>
+
+  <script>
+
+function toggleCaja3() {
+  let caja3 = document.getElementById("caja3");
+  if (window.innerWidth >= 700) {
+    caja3.style.display = "none";
+  } else {
+    caja3.style.display = "";
+  }
+}
+toggleCaja3();
+window.addEventListener("resize", toggleCaja3);
+
+let demoDiv = document.getElementById("demo");
+let btnMsg = document.getElementById("boton");
+btnMsg.addEventListener("click", function () {
+  demoDiv.textContent = "holis";
+});
+
+let btnMsgg = document.getElementById("boton2");
+btnMsgg.addEventListener("click", function () {
+  document.body.classList.toggle("dark-mode");
+  if (document.body.classList.contains("dark-mode")) {
+    btnMsgg.textContent = "Modo Claro";
+  } else {
+    btnMsgg.textContent = "Modo Oscuro";
+  }
+
+
+
+});
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    .landing {
+      max-width: 700px;
+      margin: 60px auto;
+      padding: 30px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .titulo {
+      font-size: 2rem;
+      margin-bottom: 25px;
+      color: #222;
+    }
+
+    .imagen img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+    }
+
+    .descripcion p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <section class="landing">
+    <div class="titulo">
+      <h1 id="titulo">Título de la Landing Page</h1>
+    </div>
+
+    <div class="imagen">
+      <img id="imagen" src="https://www.motor.com.co/_next/image?url=https%3A%2F%2Fwww.motor.com.co%2Fstatic%2Fassets%2Fbackend%2Fstyles%2Fcrop_1152_648_%2Fpublic%2Fcupra_formentor_2025_01_1_crop1714428854553.jpg&w=1920&q=75" alt="Cupra Formentor 2025">
+    </div>
+
+    <div class="descripcion">
+      <p id="descripcion">Aquí va la descripción del producto, servicio o proyecto. Explica de forma breve y clara qué es, para qué sirve y por qué le interesa al visitante.</p>
+    </div>
+  </section>
+
+  <script>
+    const titulo = document.getElementById("titulo");
+    const descripcion = document.getElementById("descripcion");
+    const imagen = document.getElementById("imagen");
+
+    const imgDesktop = "https://www.motor.com.co/_next/image?url=https%3A%2F%2Fwww.motor.com.co%2Fstatic%2Fassets%2Fbackend%2Fstyles%2Fcrop_1152_648_%2Fpublic%2Fcupra_formentor_2025_01_1_crop1714428854553.jpg&w=1920&q=75";
+    const imgTablet = "https://www.motor.com.co/static/assets/backend/originales/2024/04/29/cupra_lexn_sportstourer_2025_01_crop1714428919938.jpg";
+    const imgPhone = "https://www.motor.com.co/static/assets/backend/originales/2024/04/29/cupra_lexn_2025_01_crop1714428987971.jpg";
+
+    function resize() {
+      if (window.innerWidth >= 1024) {
+        titulo.textContent = "Modo Desktop";
+        descripcion.textContent = "Landing page de 3 secciones: título, imagen y descripción.";
+        imagen.src = imgDesktop;
+      } else if (window.innerWidth >= 768) {
+        titulo.textContent = "Modo Tablet";
+        descripcion.textContent = "Landing page de 3 secciones: título, imagen y descripción.";
+        imagen.src = imgTablet;
+      } else {
+        titulo.textContent = "Modo Teléfono";
+        descripcion.textContent = "Landing page de 3 secciones: título, imagen y descripción.";
+        imagen.src = imgPhone;
+      }
+    }
+
+    window.addEventListener("resize", resize);
+
+    resize(); // Llamar a la función al cargar la página para aplicar el estilo inicial
+  </script>
+
+</body>
+</html>

@@ -13,45 +13,25 @@
 body.dark-mode {
   background-color: #333;
 }
-    /* ==========================================
-       ESTADO 2 — Grid Básico (SIN RESOLVER a propósito)
-       Este es el punto de partida para escribirlo en vivo en clase.
-       Sigue los TODO en orden — cada uno agrega UNA propiedad de la
-       tabla "Propiedades del contenedor" del recurso de Grid/Flexbox
-       (semana_03_recurso_css_grid_flexbox_tailwind.md).
-    ========================================== */
+   
     .grid-container {
-      /* TODO 1: activa Grid en este contenedor.
-         Propiedad: display
-         Valor: grid
-      */
       
       display: grid ;
       
-      /* TODO 2: define 3 columnas de 200px cada una.
-         Propiedad: grid-template-columns
-         Pista: puedes escribir "200px 200px 200px" a mano,
-         o usar el atajo repeat(3, 200px) — ambos hacen lo mismo.
-      */
       grid-template-columns: 100px 2fr 1fr;
-      
-      /* TODO 3: agrega espacio entre las celdas, sin usar márgenes.
-         Propiedad: gap
-         Valor sugerido: 15px
-      */
       
        gap:10px;
       
       @media (min-width: 500px) {
       .grid-item {
-        background-color: black; 
+        background-color: rgb(243, 166, 166); 
         }
        }
       
        @media (min-width: 700px) {
       .grid-item {
         border-radius: 50px;
-        background-color: red; 
+        background-color: rgb(211, 89, 89); 
         }
        }
        @media (min-width: 700px) {
@@ -62,13 +42,13 @@ body.dark-mode {
        }
 
      
-      background-color: #030C38;
+      background-color: #dfbc89;
       padding: 15px;
       border-radius: 8px;
     }
 
     .grid-item {
-      background-color: #9C6056;
+      background-color: #e49d4b;
       color: white;
       padding: 30px;
       text-align: center;
@@ -84,7 +64,7 @@ body.dark-mode {
       border-radius: 6px;
     }
     .grid-item-3 {
-      background-color: #145a32;
+      background-color: #e05050e3;
       color: white;
       padding: 30px;
       text-align: center;
@@ -92,48 +72,53 @@ body.dark-mode {
       border-radius: 6px;
     }
 
-
-    /* TODO 4 (opcional, para quien termine antes): alinea el
-       contenido de cada celda al centro verticalmente.
-       Propiedad: align-items (va en .grid-container, no en .grid-item)
-       Valor: center
-    */
   </style>
 </head>
 <body>
-  <h1>Mi Primer Grid</h1>
-  <p style="margin: 20px 0;">Grid con 3 columnas de 200px cada una — completa los TODO del CSS.</p>
+  <h1 id="titulo">Mi Primer Grid</h1>
+  <p id= "descripcion"style="margin: 20px 0;">Grid con 3 columnas de 200px cada una — completa los TODO del CSS.</p>
 
   <div class="grid-container">
     <div class="grid-item">1</div>
     <div class="grid-item">2</div>
     <div class="grid-item">3</div>
     <div class="grid-item">4</div>
-    <div class="grid-item">5</div>
-    <div class="grid-item">6</div>
-    <div class="grid-item">7</div>
     <div id="item8" class="grid-item">8</div>
     <div id="demo" class="grid-item">9</div>
   </div>
 
- 
-
   <button id="boton">Botón</button>
   <button id="boton2">Botón</button>
 
-   <div id="caja2" class="grid-container">
+   <div id="caja1" class="grid-container-1">
     <div class="grid-item">A</div>
     <div class="grid-item">B</div>
     <div class="grid-item">C</div>
   </div>
 
-  <div id="caja3" class="grid-container">
-    <div class="grid-item-3">D</div>
-    <div class="grid-item-3">E</div>
+  <div id="caja2" class="grid-container-2">
+    <div class="grid-item-1">D</div>
+    <div class="grid-item-2">E</div>
+    <div class="grid-item-3">F</div>
+  </div>
+<div id="caja3" class="grid-container-3">
+    <div class="grid-item-1">D</div>
+    <div class="grid-item-2">E</div>
+    <div class="grid-item-3">F</div>
+  </div>
+  <div id="caja4" class="grid-container-4">
+    <div class="grid-item-1">D</div>
+    <div class="grid-item-2">E</div>
     <div class="grid-item-3">F</div>
   </div>
 
+  
+
   <script>
+btn
+
+const titulo = document.getElementById("titulo");
+const descripcion = document.getElementById("descripcion");
 
 function toggleCaja3() {
   let caja3 = document.getElementById("caja3");
@@ -161,9 +146,27 @@ btnMsgg.addEventListener("click", function () {
     btnMsgg.textContent = "Modo Oscuro";
   }
 
-
-
 });
+function resize () {
+  if (window.innerWidth >= 1024) { 
+    titulo.textContent = "Modo Desktop";
+    descripcion.textContent = "Grid con 3 columnas de 200px cada una — completa los TODO del CSS.";
+  }
+  else if (window.innerWidth >=768)
+  {
+    titulo.textContent = "Modo Tablet";
+    descripcion.textContent = "Grid con 3 columnas de 200px cada una — completa los TODO del CSS.";
+  }
+  else {
+    titulo.textContent = "Modo Teléfono";
+    descripcion.textContent = "Grid con 3 columnas de 200px cada una — completa los TODO del CSS.";
+  }
+}
+
+window.addEventListener("resize", resize);
+
+resize(); // Llamar a la función al cargar la página para aplicar el estilo inicial
+
 
 
   </script>

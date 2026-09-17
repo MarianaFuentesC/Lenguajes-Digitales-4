@@ -1,0 +1,90 @@
+<body>
+  <input type="text" id="input" placeholder="Escribe algo...">
+  <button id="boton">Enviar</button>
+  <button id="boton2">Eliminar</button>
+  <button id="boton3" onclick="eliminarPrimero()">Eliminar Primero</button>
+  <button id="boton4">Mostrar</button>
+  <button id="boton5">Buscar Elemento</button>
+  <p id="resultado"></p>
+  <ul id="lista"></ul>
+
+  <script>
+    let arr = ["manzana","pera","uva","mango",
+                  "pina","fresa","melon","kiwi",
+                  "naranja","limon","papaya","banano"];
+
+    const input = document.getElementById("input");
+    const boton = document.getElementById("boton");
+    const resultado = document.getElementById("resultado");
+    const button2 = document.getElementById("boton2");
+    const button3 = document.getElementById("boton3");
+    const button4 = document.getElementById("boton4");
+
+
+
+    boton.addEventListener("click", function() {
+      console.log("input:", input.value.trim().toLowerCase());
+      resultado.textContent = "valor ingresado: " + input.value.trim().toLowerCase();
+    // Agregar el valor al arreglo
+      arr.push(input.value.trim().toLowerCase());
+      // Agregar el valor al inicio del arreglo
+      //arr
+      arr.unshift(input.value.trim().toLowerCase());
+    });
+
+    function eliminarUltimo() {
+      if (arr.length > 0) {
+        let eliminado = arr.pop();
+        resultado.textContent = "Último valor eliminado: " + eliminado;
+      } else {
+        resultado.textContent = "El arreglo está vacío, no hay elementos para eliminar.";
+      }
+    }
+
+    function eliminarPrimero() {
+      if (arr.length > 0) {
+        let eliminado = arr.shift();
+        resultado.textContent = "Primer valor eliminado: " + eliminado;
+        mostrarLista();
+      } else {
+        resultado.textContent = "El arreglo está vacío, no hay elementos para eliminar.";
+      }
+    }
+    button2.addEventListener("click", function() {
+      eliminarUltimo();
+    });
+    const button3 = document.getElementById("boton3");
+    button3.addEventListener("click", function() {
+      eliminarPrimero();
+    });
+
+    const lista = document.getElementById("lista");
+    const button4 = document.getElementById("boton4");
+
+    function mostrarLista() {
+      lista.innerHTML = "";
+      arr.forEach(function(item) {
+        lista.innerHTML += "<li>" + item + "</li>";
+      });
+    }
+
+    button4.addEventListener("click", function() {
+      mostrarLista();
+    });
+
+    function buscarElemento() {
+      let valor = input.value.trim().toLowerCase();
+      if (valor === "") {
+        resultado.textContent = "El campo no puede estar vacío.";
+        return;
+      }
+      let indice = arr.indexOf(valor);
+      if (indice !== -1) {
+        resultado.textContent = "Encontrado en posición " + indice + ".";
+      } else {
+        resultado.textContent = "No está en la lista.";
+      }
+    }
+  </script>
+</body>
+    

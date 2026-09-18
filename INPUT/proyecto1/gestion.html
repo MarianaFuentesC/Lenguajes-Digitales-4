@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de destinos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <h2>Gestión</h2>
+      <nav class="sidebar-nav">
+        <button class="sidebar-item" data-panel="crear">Crear</button>
+        <button class="sidebar-item" data-panel="mostrar">Mostrar todos</button>
+        <button class="sidebar-item" data-panel="actualizar">Actualizar</button>
+        <button class="sidebar-item" data-panel="eliminar">Eliminar</button>
+      </nav>
+      <a class="link-galeria" href="index.html">Ver galería</a>
+    </aside>
+
+    <main class="contenido">
+      <section id="panel-crear" class="panel">
+        <h1>Crear destino</h1>
+        <form id="form-destino" class="form-destino">
+          <input type="text" id="input-nombre" placeholder="Nombre" required>
+          <input type="text" id="input-tipo" placeholder="Tipo (Ciudad, Isla...)" required>
+          <input type="text" id="input-pais" placeholder="País" required>
+          <input type="text" id="input-continente" placeholder="Continente" required>
+          <input type="text" id="input-idioma" placeholder="Idioma" required>
+          <input type="url" id="input-imagen" placeholder="URL de imagen" required>
+          <textarea id="input-descripcion" placeholder="Descripción" required></textarea>
+          <input type="text" id="input-caracteristicas" placeholder="Características (separadas por coma)">
+          <input type="number" id="input-calificacion" placeholder="Calificación (0-100)" min="0" max="100" required>
+          <label class="check-recomendado"><input type="checkbox" id="input-recomendado"> Recomendado</label>
+          <button type="submit" id="btn-submit">Agregar destino</button>
+        </form>
+      </section>
+
+      <section id="panel-mostrar" class="panel" hidden>
+        <h1>Todos los destinos</h1>
+        <div class="gestion-lista" id="lista-mostrar"></div>
+      </section>
+
+      <section id="panel-actualizar" class="panel" hidden>
+        <h1>Actualizar destino</h1>
+        <div class="gestion-lista" id="lista-actualizar"></div>
+      </section>
+
+      <section id="panel-eliminar" class="panel" hidden>
+        <h1>Eliminar destino</h1>
+        <div class="gestion-lista" id="lista-eliminar"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="storage.js"></script>
+  <script src="gestion.js"></script>
+</body>
+</html>

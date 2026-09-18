@@ -15,3 +15,11 @@ que nunca definí.
 Me costó organizar las referencias visuales por tema en vez de por sitio de origen. Al principio
 quería agruparlas por dónde las encontré, pero agruparlas por lo que inspiran (color, tipografía,
 layout) tiene más sentido para el proyecto.
+
+## 2026-09-18
+
+Me costó entender por qué lo que agregaba en `gestion.html` no aparecía en `index.html`: cada
+página carga su propia copia del array de `data.js`, así que sin algo que las conecte, los cambios
+se quedan solo en esa pestaña. Aprendí a usar `localStorage` para que ambas páginas lean y escriban
+el mismo estado. También terminé de entender la diferencia entre "crear" (agregar al final del
+array) y "actualizar" (reemplazar por índice) armando el flujo de editar del CRUD.

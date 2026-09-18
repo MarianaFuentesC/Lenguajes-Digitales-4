@@ -1,90 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>arr2</title>
+</head>
+
 <body>
-  <input type="text" id="input" placeholder="Escribe algo...">
-  <button id="boton">Enviar</button>
-  <button id="boton2">Eliminar</button>
-  <button id="boton3" onclick="eliminarPrimero()">Eliminar Primero</button>
-  <button id="boton4">Mostrar</button>
-  <button id="boton5">Buscar Elemento</button>
+  <input type="text" id="textInput">
+  <button id="btn">Enviar</button>
+  <button id="btn2">Eliminar</button>
+  <button id="btn3" >Eliminar Primero</button>
+  <button id="btn4">Mostrar Lista</button>
+  <button id="btn5">Buscar</button>
+  <button id="btn6">Eliminar por Nombre</button>
   <p id="resultado"></p>
   <ul id="lista"></ul>
 
   <script>
-    let arr = ["manzana","pera","uva","mango",
-                  "pina","fresa","melon","kiwi",
-                  "naranja","limon","papaya","banano"];
+    //arreglo añadido//
+    let arr=["manzana","pera","uva","mango","piña","fresa","melon","kiwi","naranja","limon","papaya","banano"];
 
-    const input = document.getElementById("input");
-    const boton = document.getElementById("boton");
+    const textInput = document.getElementById('textInput');
+    const btn = document.getElementById('btn');
     const resultado = document.getElementById("resultado");
-    const button2 = document.getElementById("boton2");
-    const button3 = document.getElementById("boton3");
-    const button4 = document.getElementById("boton4");
+    const btn2 = document.getElementById('btn2');
+    const btn3 = document.getElementById('btn3');
+    const btn4 = document.getElementById('btn4');
+    const lista = document.getElementById('lista');
+    const btn5 = document.getElementById('btn5');
+    const btn6 = document.getElementById('btn6');
 
+    btn.addEventListener("click", function(){
+      console.log("input:", textInput.value.trim().toLowerCase());
+      resultado.textContent = "Valor ingresado: " + textInput.value.trim().toLowerCase();
+ 
+      //agrgar el valor ingresado al arreglo//
+      arr.push(textInput.value.trim().toLowerCase());
 
-
-    boton.addEventListener("click", function() {
-      console.log("input:", input.value.trim().toLowerCase());
-      resultado.textContent = "valor ingresado: " + input.value.trim().toLowerCase();
-    // Agregar el valor al arreglo
-      arr.push(input.value.trim().toLowerCase());
-      // Agregar el valor al inicio del arreglo
-      //arr
-      arr.unshift(input.value.trim().toLowerCase());
+      //agrgar el valor ingresado al inicio de ese arreglo"//
+      arr.unshift(textInput.value.trim().toLowerCase());
     });
 
-    function eliminarUltimo() {
-      if (arr.length > 0) {
-        let eliminado = arr.pop();
-        resultado.textContent = "Último valor eliminado: " + eliminado;
-      } else {
-        resultado.textContent = "El arreglo está vacío, no hay elementos para eliminar.";
-      }
-    }
+    
+function eliminarUltimo(){
+if (arr.length > 0) {
+    let eliminado = arr.pop();
+    resultado.textContent = "Ultimo elemento eliminado: " + eliminado;
 
-    function eliminarPrimero() {
-      if (arr.length > 0) {
-        let eliminado = arr.shift();
-        resultado.textContent = "Primer valor eliminado: " + eliminado;
-        mostrarLista();
-      } else {
-        resultado.textContent = "El arreglo está vacío, no hay elementos para eliminar.";
-      }
-    }
-    button2.addEventListener("click", function() {
-      eliminarUltimo();
-    });
-    const button3 = document.getElementById("boton3");
-    button3.addEventListener("click", function() {
-      eliminarPrimero();
-    });
+} else {
+  resultado.textContent = "El arreglo esta vacio.";
+}
+}
 
-    const lista = document.getElementById("lista");
-    const button4 = document.getElementById("boton4");
+    btn2.addEventListener("click", eliminarUltimo);
 
-    function mostrarLista() {
-      lista.innerHTML = "";
-      arr.forEach(function(item) {
-        lista.innerHTML += "<li>" + item + "</li>";
-      });
-    }
 
-    button4.addEventListener("click", function() {
-      mostrarLista();
-    });
+function eliminarPrimero(){
+if (arr.length > 0) {
+    let eliminado = arr.shift();
+    resultado.textContent = "Primer elemento eliminado: " + eliminado;
+    mostrarLista();
+} else {
+    resultado.textContent = "El arreglo esta vacio.";
+}
+}
+
+    btn3.addEventListener("click", eliminarPrimero);
+
+
+function mostrarLista(){
+  lista.innerHTML = "";
+  arr.forEach(function(item){
+    let li = document.createElement("li");
+    li.textContent = item;
+    lista.appendChild(li);
+  });
+}
+
+    btn4.addEventListener("click", mostrarLista);
+
 
     function buscarElemento() {
-      let valor = input.value.trim().toLowerCase();
-      if (valor === "") {
-        resultado.textContent = "El campo no puede estar vacío.";
-        return;
-      }
-      let indice = arr.indexOf(valor);
+      let valorBuscado = textInput.value.trim().toLowerCase();
+      let indice = arr.indexOf(valorBuscado);
+
       if (indice !== -1) {
-        resultado.textContent = "Encontrado en posición " + indice + ".";
+        resultado.textContent = "Elemento encontrado en la posicion: " + indice;
       } else {
-        resultado.textContent = "No está en la lista.";
+        resultado.textContent = "Elemento no encontrado en el arreglo.";
       }
     }
-  </script>
+
+    btn5.addEventListener("click", buscarElemento);
+
+    function eliminarElemento() {
+let valorBuscado = textInput.value.trim().toLowerCase();
+if (valorBuscado ==""){
+  resultado.textContent = "Por favor ingrese un valor para eliminar.";
+  return;
+}
+
+let indice = arr.indexOf(valorBuscado);
+if (indice !== -1) {
+  resultado.textContent = "Elemento eliminado de la posicion: " + indice;
+  arr.splice(indice, 1);
+  mostrarLista();
+    }
+    else {
+      resultado.textContent = "Elemento no encontrado en el arreglo.";
+    }
+  }
+  
+    btn6.addEventListener("click", eliminarElemento);
+
+    function cambiarElemento () {
+      let valorBuscado = textInput.value.trim().toLowerCase();
+      if (valorBuscado == ""){
+        resultado.textContent = "Por favor ingrese un valor para cambiar.";
+        return;
+
+        let indice = arr.indexOf(valorBuscado);
+        if (indice !== -1) {
+          let nuevoValor = prompt("Ingrese el nuevo valor:");
+          if (nuevoValor !== null && nuevoValor.trim() !== "") {
+            arr[indice] = nuevoValor.trim().toLowerCase();
+            resultado.textContent = "Elemento" + valorBuscado + "remplazado por" + nuevoValor.trim().toLowerCase();
+            mostrarLista();
+          } else {
+            resultado.textContent = "No se ingreso un valor valido.";
+          }
+        } else {
+          resultado.textContent = "Elemento no encontrado en el arreglo.";
+        }
+      }
+    }
+    mostrarLista();
+      
+</script>
 </body>
-    
+</html>

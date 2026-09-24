@@ -26,10 +26,35 @@ function createCard(destino) {
   return card;
 }
 
-destinos = obtenerDestinos();
+function renderizarObjetos(listaObjetos) {
+  cardsContainer.innerHTML = "";
+  listaObjetos.forEach((objeto) => {
+    cardsContainer.appendChild(createCard(objeto));
+  });
+}
 
-destinos.forEach((destino) => {
-  cardsContainer.appendChild(createCard(destino));
+const destinos = obtenerDestinos();
+
+renderizarObjetos(destinos);
+
+const filtroIdioma = document.getElementById("filtro-idioma");
+
+const idiomas = [...new Set(destinos.map((destino) => destino.idioma))].sort();
+idiomas.forEach((idioma) => {
+  const opcion = document.createElement("option");
+  opcion.value = idioma;
+  opcion.textContent = idioma;
+  filtroIdioma.appendChild(opcion);
+});
+
+document.getElementById("btn-filtrar").addEventListener("click", () => {
+  const idiomaElegido = filtroIdioma.value;
+
+  if (idiomaElegido === "todos") {
+    renderizarObjetos(destinos);
+  } else {
+    renderizarObjetos(destinos.filter((destino) => destino.idioma === idiomaElegido));
+  }
 });
 
 document.getElementById("dark-mode-toggle").addEventListener("click", () => {

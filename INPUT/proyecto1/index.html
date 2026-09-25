@@ -7,17 +7,32 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <button id="dark-mode-toggle">🌙 Modo oscuro</button>
+  <button id="dark-mode-toggle">Modo oscuro</button>
+
+  <header class="header">
+    <h1>Destinos Turísticos</h1>
+  </header>
 
   <section class="filtros">
-    <label for="filtro-idioma">Idioma</label>
-    <select id="filtro-idioma">
-      <option value="todos">Todos</option>
-    </select>
-    <button id="btn-filtrar">Filtrar</button>
+    <div class="filtro-idioma">
+      <label for="filtro-idioma">Idioma</label>
+      <select id="filtro-idioma">
+        <option value="todos">Todos</option>
+      </select>
+    </div>
+
+    <div class="filtro-continentes" id="filtro-continentes"></div>
   </section>
 
-<section class="galeria" id="galeria"></section>
+  <div class="galeria-layout">
+    <aside class="filtro-calificacion">
+      <label for="filtro-calificacion">Calificación mínima</label>
+      <input type="range" id="filtro-calificacion" step="1">
+      <output id="valor-calificacion" for="filtro-calificacion"></output>
+    </aside>
+
+    <section class="galeria" id="galeria"></section>
+  </div>
 
   <script src="data.js"></script>
   <script src="storage.js"></script>

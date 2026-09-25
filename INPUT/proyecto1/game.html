@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destinos — Juego</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <h1>Destinos Turísticos</h1>
+  </header>
+
+  <section class="login" id="seccion-login">
+    <form class="form-destino" id="form-login" novalidate>
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" required>
+
+      <label for="alias">Alias:</label>
+      <input type="text" id="alias" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" required>
+
+      <label for="contrasena">Contraseña:</label>
+      <input type="password" id="contrasena" required>
+
+      <ul class="requisitos" id="requisitos">
+        <li data-regla="longitud">Mínimo 6 caracteres</li>
+        <li data-regla="numero">Al menos un número</li>
+        <li data-regla="mayuscula">Al menos una mayúscula</li>
+        <li data-regla="especial">Al menos un carácter especial</li>
+      </ul>
+
+      <p class="login-error" id="login-error" hidden></p>
+
+      <button type="submit">Continuar</button>
+    </form>
+  </section>
+
+  <section class="juego" id="seccion-juego" hidden>
+    <h2 id="saludo"></h2>
+  </section>
+
+  <script src="game.js"></script>
+</body>
+</html>

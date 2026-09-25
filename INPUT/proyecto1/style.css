@@ -7,9 +7,9 @@ body {
 
 .galeria {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 250px));
+  justify-content: center;
   gap: 1rem;
-  justify-items: center;
 }
 
 #dark-mode-toggle {
@@ -24,14 +24,41 @@ body {
   cursor: pointer;
 }
 
-.filtros {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem;
+.header {
+  text-align: center;
   margin-bottom: 1rem;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  letter-spacing: 0.02em;
+}
+
+/* Filtros flotantes: se quedan arriba al hacer scroll */
+.filtros {
+  position: sticky;
+  top: 0.5rem;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 1.5rem;
+  padding: 0.8rem 1rem;
+  background-color: rgba(42, 45, 61, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   color: #f2f2f2;
   font-size: 0.9rem;
+}
+
+.filtro-idioma {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .filtros select {
@@ -42,26 +69,80 @@ body {
   font-size: 0.9rem;
 }
 
-#btn-filtrar {
+.filtro-continentes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-continente {
   padding: 0.45rem 1rem;
   border: none;
   border-radius: 999px;
-  background-color: #0e7c86;
+  background-color: #3a3f55;
   color: #ffffff;
   font-size: 0.85rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
   cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-continente:hover {
+  transform: translateY(-2px);
+}
+
+.btn-continente.active {
+  background-color: #0e7c86;
+  font-weight: bold;
+}
+
+/* Slider vertical al lado de la galería */
+.galeria-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.galeria-layout .galeria {
+  flex: 1;
+  min-width: 0;
+}
+
+.filtro-calificacion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  width: 4.5rem;
+  flex-shrink: 0;
+  color: #f2f2f2;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+#filtro-calificacion {
+  writing-mode: vertical-lr;
+  direction: rtl;
+  height: 160px;
+  accent-color: #0e7c86;
+  cursor: pointer;
+}
+
+#valor-calificacion {
+  font-weight: bold;
 }
 
 .card {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr;
-  max-width: 280px;
   background-color: #ffffff;
+  border: 1px solid transparent;
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  transition: background-color 0.2s, color 0.2s, transform 0.5s ease;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.5s ease;
 }
 
 .card:hover {
@@ -70,7 +151,7 @@ body {
 
 .card-img {
   width: 100%;
-  height: 180px;
+  height: 150px;
   object-fit: cover;
 }
 
@@ -150,11 +231,21 @@ body.dark-mode {
 body.dark-mode .card {
   background-color: #1e1e1e;
   color: #f2f2f2;
+  border-color: #4fd1c5;
+  box-shadow: 0 0 12px rgba(79, 209, 197, 0.6), 0 0 24px rgba(79, 209, 197, 0.25);
 }
 
 body.dark-mode .card-meta,
 body.dark-mode .card-descripcion {
   color: #cccccc;
+}
+
+body.dark-mode .filtros {
+  background-color: rgba(30, 30, 30, 0.95);
+}
+
+body.dark-mode .btn-continente:not(.active) {
+  background-color: #2e2e2e;
 }
 
 body.dark-mode #dark-mode-toggle {
@@ -164,12 +255,8 @@ body.dark-mode #dark-mode-toggle {
 
 /* Responsive: celular pequeño (base) → celular estándar → celular grande */
 @media (min-width: 375px) {
-  .card {
-    max-width: 320px;
-  }
-
   .card-img {
-    height: 200px;
+    height: 160px;
   }
 
   .card-nombre {
@@ -178,24 +265,18 @@ body.dark-mode #dark-mode-toggle {
 }
 
 @media (min-width: 480px) {
-  .card {
-    max-width: 360px;
-  }
-
   .card-img {
-    height: 220px;
-  }
-
-  .card-descripcion {
-    font-size: 0.95rem;
+    height: 170px;
   }
 
   .pill {
     font-size: 0.8rem;
   }
+}
 
+@media (min-width: 900px) {
   .galeria {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 250px);
   }
 }
 
@@ -350,6 +431,27 @@ h1 {
 
 .login-error[hidden] {
   display: none;
+}
+
+/* Login del juego */
+#seccion-login .form-destino {
+  margin: 0 auto;
+}
+
+.requisitos {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #b42c2c;
+  font-size: 0.8rem;
+}
+
+.requisitos li.cumple {
+  color: #0e7c86;
+}
+
+.juego h2 {
+  color: #f2f2f2;
+  text-align: center;
 }
 
 @media (min-width: 480px) {

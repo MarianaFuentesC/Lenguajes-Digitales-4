@@ -47,14 +47,60 @@ idiomas.forEach((idioma) => {
   filtroIdioma.appendChild(opcion);
 });
 
-document.getElementById("btn-filtrar").addEventListener("click", () => {
-  const idiomaElegido = filtroIdioma.value;
+const filtroCalificacion = document.getElementById("filtro-calificacion");
+const valorCalificacion = document.getElementById("valor-calificacion");
 
-  if (idiomaElegido === "todos") {
-    renderizarObjetos(destinos);
-  } else {
-    renderizarObjetos(destinos.filter((destino) => destino.idioma === idiomaElegido));
+const calificaciones = destinos.map((destino) => destino.calificacion);
+filtroCalificacion.min = Math.min(...calificaciones);
+filtroCalificacion.max = Math.max(...calificaciones);
+filtroCalificacion.value = filtroCalificacion.min;
+valorCalificacion.textContent = filtroCalificacion.value;
+
+const filtroContinentes = document.getElementById("filtro-continentes");
+let continenteElegido = "todos";
+
+const continentes = [...new Set(destinos.map((destino) => destino.continente))].sort();
+["todos", ...continentes].forEach((continente) => {
+  const boton = document.createElement("button");
+  boton.className = "btn-continente";
+  boton.dataset.continente = continente;
+  boton.textContent = continente === "todos" ? "Todos" : continente;
+  if (continente === continenteElegido) {
+    boton.classList.add("active");
   }
+  filtroContinentes.appendChild(boton);
+});
+
+filtroContinentes.addEventListener("click", (evento) => {
+  const boton = evento.target.closest(".btn-continente");
+  if (!boton) return;
+
+  continenteElegido = boton.dataset.continente;
+  filtroContinentes.querySelectorAll(".btn-continente").forEach((b) => {
+    b.classList.toggle("active", b === boton);
+  });
+  aplicarFiltros();
+});
+
+function aplicarFiltros() {
+  const idiomaElegido = filtroIdioma.value;
+  const calificacionMinima = Number(filtroCalificacion.value);
+
+  const filtrados = destinos.filter((destino) => {
+    const cumpleIdioma = idiomaElegido === "todos" || destino.idioma === idiomaElegido;
+    const cumpleContinente = continenteElegido === "todos" || destino.continente === continenteElegido;
+    const cumpleCalificacion = destino.calificacion >= calificacionMinima;
+    return cumpleIdioma && cumpleContinente && cumpleCalificacion;
+  });
+
+  renderizarObjetos(filtrados);
+}
+
+filtroIdioma.addEventListener("change", aplicarFiltros);
+
+filtroCalificacion.addEventListener("input", () => {
+  valorCalificacion.textContent = filtroCalificacion.value;
+  aplicarFiltros();
 });
 
 document.getElementById("dark-mode-toggle").addEventListener("click", () => {

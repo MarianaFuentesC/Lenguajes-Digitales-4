@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitio nombre="Run Rob Run" url="https://www.runrobrun.com/">
+  <header>
+    <logo>Texto "ROBERT APERIOS" en tipografía monoespaciada, arriba a la izquierda</logo>
+    <nav tipo="fija">
+      <enlace>About</enlace>
+      <enlace>Tools</enlace>
+      <enlace>Work</enlace>
+      <enlace>Let's create</enlace>
+    </nav>
+  </header>
+  <main>
+    <section tipo="hero">Titular "Creative Developer" con forma orgánica animada en canvas, botón Press play, ubicación y hora local (Dinamarca/Inglaterra)</section>
+    <section tipo="manifiesto">Tipografía cinética con el scroll: "Thoughtful ideas shaped with meaning, bold systems built to hold attention"</section>
+    <section tipo="sobre-mi">About: cinco áreas numeradas: Visual systems, Front-end craft, Motion language, Brand presence, Concept to form</section>
+    <section tipo="herramientas">Tools: galería con scroll de cinco experimentos de motion en video (Runman, Chroma Warp, Split Mask, Text Maze, Whale)</section>
+    <section tipo="portafolio">Work: dos proyectos Webflow (Dash, Racepoint) con descripción y enlace View project</section>
+    <section tipo="cta">Cita "Alarm bells are ringing, Willie" y llamado "Let me run your next project!"</section>
+  </main>
+  <footer>
+    <redes>LinkedIn, Facebook, Instagram, Contra</redes>
+    <contacto>Campo de email con botón Send, enlace mailto "Let's create", selector de idioma English/Dansk/Português</contacto>
+  </footer>
+</sitio>

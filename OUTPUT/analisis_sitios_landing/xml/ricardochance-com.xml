@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitio nombre="Ricardo Chance" url="https://www.ricardochance.com/es">
+  <header>
+    <logo>Texto "Ricardo Chance" en Red Hat Display, arriba a la izquierda</logo>
+    <nav tipo="hamburguesa">
+      <enlace>Inicio</enlace>
+      <enlace>Sobre mí</enlace>
+      <enlace>Proyectos</enlace>
+      <enlace>Contacto</enlace>
+      <enlace>EN / ES</enlace>
+    </nav>
+  </header>
+  <main>
+    <section tipo="hero">"Construyo experiencias web inmersivas." con estrella 3D de partículas y botones Iniciar un proyecto / Ver proyectos</section>
+    <section tipo="manifiesto">"Dando forma al futuro a través del diseño, la tecnología y las ideas audaces", resumen de 8 años de experiencia y enlace Saber más</section>
+    <section tipo="proyectos">Proyectos destacados con scroll fijado: nk.studio, Flixxo, Suku, enlaces Ver en vivo y Ver todos los proyectos</section>
+    <section tipo="servicios">Tres líneas de servicio: Experiencias Web Inmersivas, Sitios Web Premium, Diseño + Desarrollo, con 8 servicios detallados</section>
+    <section tipo="proceso">Cuatro pasos: Descubrimiento, Concepto y Diseño, Desarrollo, Lanzamiento y Más allá</section>
+    <section tipo="contacto">"¿Interesado en trabajar juntos?": formulario (nombre, email, empresa, dos selectores desplegables, mensaje) y email directo</section>
+  </main>
+  <footer>
+    <redes>LinkedIn, Instagram, Twitter / X</redes>
+    <contacto>hello@ricardochance.com, Buenos Aires, Argentina, enlaces a Inicio, Sobre mí, Proyectos y Contacto</contacto>
+  </footer>
+</sitio>

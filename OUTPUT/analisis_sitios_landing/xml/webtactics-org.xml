@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitio nombre="Web Tactics" url="https://webtactics.org/">
+  <header>
+    <logo>Wordmark "WEB TACTICS" en tipografía display; isotipo "W" 3D (WebGL) en el hero</logo>
+    <nav tipo="overlay-fullscreen">
+      <enlace>Home</enlace>
+      <enlace>Services</enlace>
+      <enlace>Work</enlace>
+      <enlace>Gallery</enlace>
+      <enlace>Lab</enlace>
+      <enlace>About</enlace>
+      <enlace>Blog</enlace>
+      <enlace>Contact</enlace>
+    </nav>
+  </header>
+  <main>
+    <section tipo="hero">Titular con efecto de tipeo "World Class ..." sobre logo 3D con bloom, subtítulo de servicios</section>
+    <section tipo="presentacion">Manifiesto de la agencia: experiencias estratégicas que conectan marcas y audiencias</section>
+    <section tipo="marquesina">Cinta animada con los servicios: Immersive Web, 3D, AI Automations, Brand Systems</section>
+    <section tipo="clientes">"Trusted by 300+ brands": dos cintas de logos de clientes en movimiento</section>
+    <section tipo="reel">Reel de la agencia "Crafting Digital Realities"</section>
+    <section tipo="estadisticas">Contadores animados: proyectos, países, retención de clientes, año de fundación</section>
+    <section tipo="servicios">Cuatro servicios numerados con enlaces: Web, Marketing, IA, UI/UX, más etiquetas secundarias</section>
+    <section tipo="proceso">Cinco pasos: Discovery, Strategy, Design, Build, Launch</section>
+    <section tipo="laboratorio">The Lab: conceptos experimentales para marcas ficticias (Midad, Nocturne, Ghurza)</section>
+    <section tipo="cta">"Ready to elevate?" con botón Start your project</section>
+    <section tipo="portafolio">Selected Archives: siete logros desplegables con scroll horizontal</section>
+    <section tipo="testimonios">Carrusel de tres testimonios de clientes con flechas y puntos</section>
+    <section tipo="faq">Acordeón con cinco preguntas frecuentes</section>
+    <section tipo="contacto">Formulario de contacto con servicio de interés y rango de presupuesto</section>
+  </main>
+  <footer>
+    <redes>Instagram, LinkedIn, YouTube</redes>
+    <contacto>Botón de WhatsApp, enlace de email, páginas y servicios, Privacy Policy, Terms of Use</contacto>
+  </footer>
+</sitio>

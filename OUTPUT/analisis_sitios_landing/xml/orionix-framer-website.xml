@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitio nombre="Orionix" url="https://orionix.framer.website/">
+  <header>
+    <logo>Isotipo de estrella roja con el texto "orionix" en minúsculas</logo>
+    <nav tipo="fija">
+      <enlace>Works</enlace>
+      <enlace>About</enlace>
+      <enlace>Pricing</enlace>
+      <enlace>Services (desplegable con 5 servicios)</enlace>
+      <enlace>Blog</enlace>
+      <enlace>Book a call</enlace>
+    </nav>
+  </header>
+  <main>
+    <section tipo="hero">Titular serif "We make Creative Things." con objetos 3D iridiscentes, hora local GMT-7 y email copiable</section>
+    <section tipo="clientes">"Trusted by world-leading enterprises": grilla de logos de clientes</section>
+    <section tipo="reel">Video reel con texto circular "Watch our reel"</section>
+    <section tipo="portafolio">Featured work: seis proyectos (Rivermark, Fluxa, River, Season, AXN, Nova) con etiquetas y CTA de llamada</section>
+    <section tipo="servicios">Cinco servicios numerados con subetiquetas: Brand, Growth, Social Media, UI/UX, Web</section>
+    <section tipo="proceso">How we work: Discovery, Strategy, Design</section>
+    <section tipo="precios">Tres planes: Launch ($6,000), Growth ($12,000), Scale ($5,000/mes)</section>
+    <section tipo="testimonios">Client voices: tres citas de clientes con nombre y cargo</section>
+    <section tipo="estadisticas">Contadores animados: proyectos, industrias, años de experiencia</section>
+    <section tipo="blog">Insights: dos artículos recientes y enlace View all articles</section>
+    <section tipo="faq">Seis preguntas frecuentes numeradas en acordeón</section>
+    <section tipo="cta">"Got a great idea you want to bring to life?" con botón Book a call</section>
+  </main>
+  <footer>
+    <redes>X (Twitter), LinkedIn, Behance, Dribbble</redes>
+    <contacto>hello@orionix.com (copiable en el hero), botón Book a call, créditos LoganCee Studio y KOTA, Powered by Framer</contacto>
+  </footer>
+</sitio>

@@ -1,0 +1,82 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #0f0f14;
+  color: #eaeaf0;
+}
+
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.card {
+  background: #17171f;
+  border: 1px solid #2a2a36;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+h1, h2 { margin-top: 0; }
+
+form { display: grid; gap: 1rem; }
+
+label { display: grid; gap: 0.35rem; font-size: 0.9rem; }
+
+input {
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #2a2a36;
+  background: #0f0f14;
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  padding: 0.6rem 1rem;
+  border: 0;
+  border-radius: 8px;
+  background: #b9a7ff;
+  color: #0f0f14;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.ghost { background: transparent; color: #b9a7ff; border: 1px solid #b9a7ff; }
+button.danger { background: #ff7a8a; }
+.btn-small { padding: 0.35rem 0.7rem; font-size: 0.85rem; }
+
+.actions { display: flex; gap: 0.5rem; }
+
+.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  border: 1px solid #2a2a36;
+  border-radius: 8px;
+}
+
+.item div:first-child { display: grid; }
+.item span { font-size: 0.85rem; opacity: 0.7; }
+.item div:last-child { display: flex; gap: 0.4rem; }
+
+.empty { opacity: 0.6; }
+
+.message {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #1f3a2b;
+}
+.message.error { background: #4a1f26; }

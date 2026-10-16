@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitio nombre="ATO Time Capsule" url="https://www.atotimecapsule.com/">
+  <header>
+    <logo>Bloque tipográfico "ATO [痕.02] 痕時の器 - time capsule - kyoto year 2165"</logo>
+    <nav tipo="fija">
+      <enlace>Sound (activar audio)</enlace>
+      <enlace>Navigate</enlace>
+      <enlace>Go to the message</enlace>
+      <enlace>Go to captured records</enlace>
+      <enlace>Go to archived objects</enlace>
+    </nav>
+  </header>
+  <main>
+    <section tipo="hero">Portada bilingüe sobre gradiente animado: presentación del Kyōshinka Circle y la transmisión desde Kioto 2165</section>
+    <section tipo="transmision">"Handle with care": anillo de partículas, lista de archivos, contador de recepción, ficha técnica de la señal y vista previa de la salida</section>
+    <section tipo="mensaje">Mensaje principal: filosofía de coevolución entre humanos y naturaleza</section>
+    <section tipo="archivo-visual">City archive: video con interfaz de datos, coordenadas, hora local JST y textos glitch</section>
+    <section tipo="mapa">Mapa interactivo de Kioto con capas filtrables (agua, investigación, desarrollo, vegetación, transporte) y botón Reveal all</section>
+    <section tipo="galeria">Photo records: fotografías de la ciudad con carrusel circular y pies de foto codificados</section>
+    <section tipo="catalogo">Archived objects: catálogo de especies y objetos del futuro con nombre bilingüe y código</section>
+    <section tipo="cierre">"Data stream complete / transmission over - awaiting next signal"</section>
+  </main>
+  <footer>
+    <redes/>
+    <contacto>Créditos (Hadar Ben Shalom, Noya Merige, Edor Nissim), aviso de ficción, declaración de accesibilidad de Wix y botón Start creating</contacto>
+  </footer>
+</sitio>

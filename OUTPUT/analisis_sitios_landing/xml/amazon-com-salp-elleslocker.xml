@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitio nombre="Elle's Locker" url="https://www.amazon.com/salp/elleslocker">
+  <header>
+    <logo>Logo "prime original ELLE" en rosa (micrositio) dentro del header estándar de Amazon</logo>
+    <nav tipo="overlay-fullscreen">
+      <enlace>Home</enlace>
+      <enlace>Photobooth</enlace>
+      <enlace>Collage Creator</enlace>
+      <enlace>Watch Trailer</enlace>
+      <enlace>Stream Now</enlace>
+      <enlace>Shop the Show</enlace>
+    </nav>
+  </header>
+  <main>
+    <section tipo="hero">Casillero escolar cerrado con la placa "From the world of Legally Blonde - Prime Original ELLE" y botón Enter</section>
+    <section tipo="casillero-interactivo">Casillero abierto e ilustrado, explorable con zoom y flechas: fotos, stickers, accesorios y objetos con hotspots</section>
+    <section tipo="tienda">Modal "Elle's Inspo": selección de moda rosa de Shopbop con enlace Shop the Show</section>
+    <section tipo="notas">Lista manuscrita "Daily Elle Essentials" con tareas del personaje y cita final</section>
+  </main>
+  <footer>
+    <redes/>
+    <contacto>Privacy Policy, Terms of Use, Movie Platform © Powster, © Amazon Studios; footer estándar de Amazon con Servicio al Cliente y Ayuda</contacto>
+  </footer>
+</sitio>

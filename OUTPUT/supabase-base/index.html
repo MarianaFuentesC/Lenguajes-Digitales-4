@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supabase — Base CRUD</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <main class="container">
+    <p id="message" class="message" role="status" hidden></p>
+
+    <section class="card">
+      <h1 id="form-title">Crear proyecto</h1>
+      <form id="project-form">
+        <label>
+          Título
+          <input type="text" id="input-title" required>
+        </label>
+        <label>
+          Categoría
+          <input type="text" id="input-category" placeholder="UX/UI, 3D…" required>
+        </label>
+        <label>
+          Año
+          <input type="number" id="input-year" min="2000" max="2100" required>
+        </label>
+        <div class="actions">
+          <button type="submit" id="btn-submit">Agregar</button>
+          <button type="button" id="btn-cancel" class="ghost" hidden>Cancelar</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Proyectos en Supabase</h2>
+      <ul id="project-list" class="list"></ul>
+    </section>
+  </main>
+
+  <!-- Order matters: each file uses what the previous one created -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> <!-- 1° library -->
+  <script src="js/supabaseClient.js"></script>  <!-- 2° -->
+  <script src="js/datos.js"></script>           <!-- 3° -->
+  <script src="js/gestion.js"></script>         <!-- 4° -->
+</body>
+</html>

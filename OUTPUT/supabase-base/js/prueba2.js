@@ -74,9 +74,18 @@ const precios = data.map(producto => producto.precio);
   document.getElementById('resultado4').innerHTML =
     '<ul>' + precios.map(p => `<li>${p}</li>`).join('') + '</ul>';
 
+}); // ← aquí se cierra el listener de "btn-traer". Antes faltaba este
+    //   cierre y todo el CRUD de abajo quedaba ADENTRO del clic de
+    //   "Traer productos" (el botón Agregar no funcionaba hasta hacer
+    //   clic en Traer, y el navegador marcaba error de sintaxis).
+
 
     //crud
 
+    // productoPrueba es el MOLDE de referencia: el formulario de
+    // prueba2.html tiene un campo por cada una de estas propiedades,
+    // y construimos un objeto con esta misma forma a partir de lo
+    // que escriba el usuario (ver leerFormulario() más abajo).
     const productoPrueba = {
         nombre: '',
         descripcion: 'Este es un producto de prueba',
@@ -110,12 +119,78 @@ async function agregarProducto(datos) {
                      // elemento, que es la fila recién creada
 }
 
-document.getElementById('btn-agregar-obj').addEventListener('click', async () => {
-    const respuesta = await agregarProducto(productoPrueba);
+// leerFormulario(): toma los valores que el usuario escribió en el
+// formulario y arma un objeto con la MISMA forma que productoPrueba.
+// Todo lo que viene de un <input> llega como TEXTO (string), así que
+// convertimos cada campo al tipo que espera la base de datos.
+function leerFormulario() {
+  const form = document.getElementById('form-producto');
+
+  return {
+    nombre: form.nombre.value.trim(),            // texto, sin espacios sobrantes
+    descripcion: form.descripcion.value.trim(),  // texto
+    precio: Number(form.precio.value),           // "100000" → 100000 (número)
+    unidades: parseInt(form.unidades.value, 10), // "10" → 10 (entero)
+    descuento: Number(form.descuento.value) || 0, // "0.1" → 0.1; vacío → 0
+    disponible: form.disponible.checked,         // checkbox → true / false
+    // categoria es un ARRAY en productoPrueba: el usuario escribe las
+    // categorías separadas por coma ("Ropa, Hombre") y las partimos
+    // con split(), quitando espacios y entradas vacías.
+    categoria: form.categoria.value
+      .split(',')
+      .map(c => c.trim())
+      .filter(c => c !== ''),
+    image: form.image.value.trim(),              // URL de la imagen
+  };
+}
+
+// Escuchamos el evento "submit" del formulario (no el "click" del
+// botón): así funciona tanto al hacer clic en "Agregar producto"
+// como al presionar Enter, y el navegador valida los campos
+// "required" / "min" / "max" ANTES de llegar aquí.
+document.getElementById('form-producto').addEventListener('submit', async (evento) => {
+    // Por defecto un formulario recarga la página al enviarse;
+    // preventDefault() lo evita para que nosotros manejemos el envío.
+    evento.preventDefault();
+
+    const nuevoProducto = leerFormulario();
+    console.log('Enviando a Supabase:', nuevoProducto);
+
+    const respuesta = await agregarProducto(nuevoProducto);
     if (respuesta) {
         document.getElementById('respuesta').innerText = 'Producto agregado con ID: ' + respuesta.id;
+        evento.target.reset();   // limpiamos el formulario para el siguiente producto
     } else {
-        document.getElementById('respuesta').innerText = 'Error al agregar el producto.';
+        document.getElementById('respuesta').innerText = 'Error al agregar el producto (revisa la consola).';
     }
+
+// AHORA:
+async function buscarProductoPorId(id) {
+  const { data, error } = await db
+    .from('productos_practica')
+    .select('*')
+    .eq('id', id)    // eq = "equal" (igual a) — equivalente a find(p => p.id === id)
+    .single();         // single() = "espero exactamente una fila, dámela
+                        // como objeto, no como array de un elemento"
+
+  if (error) return null;
+  return data;
+}
+
+async function buscarProductosPorNombre(texto) {
+  const { data, error } = await db
+    .from('productos_practica')
+    .select('*')
+    .ilike('nombre', `%${texto}%`);
+    // ilike = "like" insensible a mayúsculas/minúsculas.
+    // los símbolos % significan "cualquier texto antes/después" —
+    // equivalente a .toLowerCase().includes(texto)
+
+  if (error) return [];
+  return data;
+}
+
+
+
 
 });

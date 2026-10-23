@@ -14,8 +14,57 @@
   <div id="resultado3"></div>
   <div id="resultado4"></div>
 
-<button id="btn-agregar-obj">Agregar producto</button>
-<div id="respuesta"></div>
+  <!-- Formulario para crear un producto nuevo. Cada campo tiene un
+       "name" igual a una propiedad de productoPrueba (prueba2.js),
+       así en JS podemos leerlo con form.nombre, form.precio, etc. -->
+  <form id="form-producto">
+    <h2>Agregar producto</h2>
+
+    <!-- nombre: texto obligatorio -->
+    <label>Nombre
+      <input type="text" name="nombre" required>
+    </label><br>
+
+    <!-- descripcion: texto largo, por eso usamos <textarea> -->
+    <label>Descripción
+      <textarea name="descripcion" rows="3"></textarea>
+    </label><br>
+
+    <!-- precio: número; step="0.01" permite decimales -->
+    <label>Precio
+      <input type="number" name="precio" min="0" step="0.01" required>
+    </label><br>
+
+    <!-- unidades: número entero (step="1") -->
+    <label>Unidades
+      <input type="number" name="unidades" min="0" step="1" required>
+    </label><br>
+
+    <!-- descuento: decimal entre 0 y 1 (0.1 = 10%), igual que en productoPrueba -->
+    <label>Descuento (0 a 1)
+      <input type="number" name="descuento" min="0" max="1" step="0.01" value="0">
+    </label><br>
+
+    <!-- disponible: booleano → checkbox (marcado = true) -->
+    <label>
+      <input type="checkbox" name="disponible" checked> Disponible
+    </label><br>
+
+    <!-- categoria: en la base es un array; aquí se escriben separadas por coma -->
+    <label>Categorías (separadas por coma)
+      <input type="text" name="categoria" placeholder="Ropa, Hombre">
+    </label><br>
+
+    <!-- image: URL de la imagen del producto -->
+    <label>URL de la imagen
+      <input type="url" name="image" placeholder="https://...">
+    </label><br>
+
+    <!-- type="submit": al hacer clic se dispara el evento "submit"
+         del formulario, que escuchamos en prueba2.js -->
+    <button type="submit" id="btn-agregar-obj">Agregar producto</button>
+  </form>
+  <div id="respuesta"></div>
 
   <!-- supabaseClient.js crea "db" (sección 4.3): el cliente ya
        conectado a tu proyecto de Supabase. Lo vamos a usar en

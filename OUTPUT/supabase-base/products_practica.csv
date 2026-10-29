@@ -1,0 +1,11 @@
+nombre,descripcion,precio,unidades,descuento,disponible,categoria,image
+Audífonos Bluetooth X200,Audífonos inalámbricos con cancelación de ruido y 30 horas de batería,189900,25,0.1,true,"{Tecnología,Audio}",https://picsum.photos/seed/audifonos/400
+Camiseta Básica Algodón,Camiseta 100% algodón de corte clásico,39900,80,0,true,"{Ropa,Hombre}",https://picsum.photos/seed/camiseta/400
+Silla Gamer ProMax,Silla ergonómica reclinable con soporte lumbar,899000,8,0.15,true,"{Hogar,Gamer}",https://picsum.photos/seed/silla/400
+Vestido Floral Verano,Vestido ligero estampado ideal para clima cálido,129900,30,0.2,true,"{Ropa,Mujer}",https://picsum.photos/seed/vestido/400
+Teclado Mecánico RGB,Teclado mecánico con switches rojos e iluminación RGB,249900,15,0.05,true,"{Tecnología,Gamer}",https://picsum.photos/seed/teclado/400
+Lámpara de Escritorio LED,Lámpara LED con tres niveles de brillo y brazo flexible,79900,40,0,true,"{Hogar,Oficina}",https://picsum.photos/seed/lampara/400
+Tenis Running Air,Tenis livianos con amortiguación para correr,319900,20,0.25,true,"{Calzado,Deporte}",https://picsum.photos/seed/tenis/400
+Mochila Urbana 25L,Mochila resistente al agua con compartimento para portátil,149900,35,0.1,true,"{Accesorios,Tecnología}",https://picsum.photos/seed/mochila/400
+Jean Slim Fit,Jean azul oscuro de corte ajustado,159900,50,0,true,"{Ropa,Hombre}",https://picsum.photos/seed/jean/400
+Botella Térmica 1L,Botella de acero inoxidable que mantiene la temperatura 12 horas,59900,0,0,false,"{Hogar,Deporte}",https://picsum.photos/seed/botella/400

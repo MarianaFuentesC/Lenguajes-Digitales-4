@@ -24,11 +24,29 @@ body {
 
 h1, h2 { margin-top: 0; }
 
+.center { text-align: center; }
+
+.header {
+  padding: 1.5rem 1rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.search {
+  width: 100%;
+  max-width: 640px;
+  justify-items: center;
+  gap: 0.5rem;
+}
+
+.search-row { display: flex; gap: 0.5rem; width: 100%; }
+.search-row input { flex: 1; }
+
 form { display: grid; gap: 1rem; }
 
 label { display: grid; gap: 0.35rem; font-size: 0.9rem; }
 
-input {
+input, textarea {
   padding: 0.6rem 0.75rem;
   border-radius: 8px;
   border: 1px solid #2a2a36;

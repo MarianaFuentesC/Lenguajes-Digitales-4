@@ -1,6 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda — CRUD Supabase</title>
+
+  <!-- Fuente Inter desde Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/prueba2.css">
+
   <!-- CDN: trae la librería de Supabase ANTES que nuestros propios
        scripts — sin esta línea, "supabase.createClient" no existiría
        todavía cuando supabaseClient.js intente usarlo -->
@@ -8,69 +18,106 @@
 </head>
 <body>
 
-  <button id="btn-traer">Traer productos</button>
-  <div id="resultado"></div>
-  <div id="resultado2"></div>
-  <div id="resultado3"></div>
-  <div id="resultado4"></div>
+  <!-- Buscador: si escribes un número busca por id, si escribes
+       texto busca por categoría, vacío muestra todos -->
+  <header class="header">
+    <p class="brand">🛍️ Mi Tienda</p>
+    <form id="search-form" class="search">
+      <label for="input-search">Buscar por categoría, Id</label>
+      <div class="search-row">
+        <input type="search" id="input-search" placeholder="Ej: Ropa o 12">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+      </div>
+    </form>
+  </header>
 
-  <!-- Formulario para crear un producto nuevo. Cada campo tiene un
-       "name" igual a una propiedad de productoPrueba (prueba2.js),
-       así en JS podemos leerlo con form.nombre, form.precio, etc. -->
-  <form id="form-producto">
-    <h2>Agregar producto</h2>
+  <main class="layout">
 
-    <!-- nombre: texto obligatorio -->
-    <label>Nombre
-      <input type="text" name="nombre" required>
-    </label><br>
+    <!-- Columna izquierda: formulario crear / editar.
+         Cada campo tiene un "name" igual a una propiedad de productoPrueba
+         (prueba2.js), así en JS podemos leerlo con form.nombre, form.precio, etc. -->
+    <section class="card form-card">
+      <!-- id="form-title": prueba2.js cambia este texto a "Editar producto"
+           cuando el formulario está en modo edición -->
+      <h2 class="center" id="form-title">Crear producto</h2>
 
-    <!-- descripcion: texto largo, por eso usamos <textarea> -->
-    <label>Descripción
-      <textarea name="descripcion" rows="3"></textarea>
-    </label><br>
+      <form id="form-producto" class="product-form">
+        <!-- nombre: texto obligatorio -->
+        <label class="full">Nombre
+          <input type="text" name="nombre" required>
+        </label>
 
-    <!-- precio: número; step="0.01" permite decimales -->
-    <label>Precio
-      <input type="number" name="precio" min="0" step="0.01" required>
-    </label><br>
+        <!-- descripcion: texto largo, por eso usamos <textarea> -->
+        <label class="full">Descripción
+          <textarea name="descripcion" rows="3"></textarea>
+        </label>
 
-    <!-- unidades: número entero (step="1") -->
-    <label>Unidades
-      <input type="number" name="unidades" min="0" step="1" required>
-    </label><br>
+        <!-- precio: número; step="0.01" permite decimales -->
+        <label>Precio
+          <input type="number" name="precio" min="0" step="0.01" required>
+        </label>
 
-    <!-- descuento: decimal entre 0 y 1 (0.1 = 10%), igual que en productoPrueba -->
-    <label>Descuento (0 a 1)
-      <input type="number" name="descuento" min="0" max="1" step="0.01" value="0">
-    </label><br>
+        <!-- unidades: número entero (step="1") -->
+        <label>Unidades
+          <input type="number" name="unidades" min="0" step="1" required>
+        </label>
 
-    <!-- disponible: booleano → checkbox (marcado = true) -->
-    <label>
-      <input type="checkbox" name="disponible" checked> Disponible
-    </label><br>
+        <!-- descuento: decimal entre 0 y 1 (0.1 = 10%), igual que en productoPrueba -->
+        <label>Descuento (0 a 1, ej: 0.1 = 10%)
+          <input type="number" name="descuento" min="0" max="1" step="0.01" value="0">
+        </label>
 
-    <!-- categoria: en la base es un array; aquí se escriben separadas por coma -->
-    <label>Categorías (separadas por coma)
-      <input type="text" name="categoria" placeholder="Ropa, Hombre">
-    </label><br>
+        <!-- disponible: booleano → checkbox (marcado = true) -->
+        <label class="check">
+          <input type="checkbox" name="disponible" checked> Disponible
+        </label>
 
-    <!-- image: URL de la imagen del producto -->
-    <label>URL de la imagen
-      <input type="url" name="image" placeholder="https://...">
-    </label><br>
+        <!-- categoria: en la base es un array; aquí se escriben separadas por coma -->
+        <label class="full">Categorías (separadas por coma)
+          <input type="text" name="categoria" placeholder="Ropa, Hombre">
+        </label>
 
-    <!-- type="submit": al hacer clic se dispara el evento "submit"
-         del formulario, que escuchamos en prueba2.js -->
-    <button type="submit" id="btn-agregar-obj">Agregar producto</button>
-  </form>
-  <div id="respuesta"></div>
+        <!-- image: URL de la imagen del producto -->
+        <label class="full">URL de la imagen
+          <input type="url" name="image" placeholder="https://...">
+        </label>
+
+        <!-- type="submit": al hacer clic se dispara el evento "submit"
+             del formulario, que escuchamos en prueba2.js -->
+        <div class="actions full">
+          <button type="submit" id="btn-agregar-obj" class="btn btn-primary">Agregar producto</button>
+          <!-- Cancelar solo se ve en modo edición (hidden lo oculta) -->
+          <button type="button" id="btn-cancelar" class="btn btn-ghost" hidden>Cancelar</button>
+        </div>
+      </form>
+
+      <p id="respuesta" class="respuesta" role="status"></p>
+    </section>
+
+    <!-- Columna derecha: lista de productos (READ) -->
+    <section class="products">
+      <h2>Productos</h2>
+      <ul id="search-results" class="product-grid"></ul>
+    </section>
+  </main>
+
+  <!-- Ejercicio anterior (map de nombres, descripciones, precios).
+       Queda guardado en un <details> para no ocupar espacio. -->
+  <details class="card practice">
+    <summary>Práctica: Traer productos con map()</summary>
+    <button id="btn-traer" class="btn btn-ghost">Traer productos</button>
+    <div class="practice-grid">
+      <div id="resultado2"></div>
+      <div id="resultado3"></div>
+      <div id="resultado4"></div>
+    </div>
+    <pre id="resultado"></pre>
+  </details>
 
   <!-- supabaseClient.js crea "db" (sección 4.3): el cliente ya
        conectado a tu proyecto de Supabase. Lo vamos a usar en
-       prueba.js, por eso tiene que cargarse ANTES que ese archivo -->
+       prueba2.js, por eso tiene que cargarse ANTES que ese archivo -->
   <script src="js/supabaseClient.js"></script>
-  <!-- prueba.js: aquí escribes el código de los Pasos 2, 3 y 4 -->
   <script src="js/prueba2.js"></script>
 </body>
 </html>

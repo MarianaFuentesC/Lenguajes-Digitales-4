@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi cuenta</title>
+    <link rel="stylesheet" href="css/client.css" />
+    <script src="js/theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4" />
+        <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+      </svg>
+    </button>
+
+    <section id="panel-cuenta" class="card">
+      <h2>Mi cuenta</h2>
+      <p id="estado-sesion">No has iniciado sesión.</p>
+
+      <div id="auth-forms" class="auth-grid">
+      <form id="form-registro">
+        <h3>Registrarme</h3>
+        <label for="registro-nombre">Nombre</label>
+        <input id="registro-nombre" type="text" required />
+
+        <label for="registro-correo">Correo</label>
+        <input id="registro-correo" type="email" required />
+
+        <label for="registro-password">Contraseña</label>
+        <input id="registro-password" type="password" minlength="6" required />
+
+        <button type="submit">Crear cuenta</button>
+      </form>
+
+      <form id="form-login">
+        <h3>Iniciar sesión</h3>
+        <label for="login-correo">Correo</label>
+        <input id="login-correo" type="email" required />
+
+        <label for="login-password">Contraseña</label>
+        <input id="login-password" type="password" required />
+
+        <button type="submit">Iniciar sesión</button>
+      </form>
+      </div>
+
+      <div class="session-actions">
+        <button id="btn-editar-perfil" type="button" hidden>Editar perfil</button>
+        <button id="btn-logout" class="ghost" type="button" hidden>Cerrar sesión</button>
+      </div>
+    </section>
+
+    <!-- Drawer del perfil: entra desde la derecha al hacer clic en "Editar perfil".
+         inert = mientras está cerrado, no se puede enfocar ni hacer clic adentro. -->
+    <div id="sidebar-overlay" class="sidebar-overlay"></div>
+    <aside id="sidebar-perfil" class="sidebar" inert>
+      <div class="sidebar-header">
+        <h3>Mis datos</h3>
+        <button id="btn-cerrar-sidebar" class="icon-btn" type="button" aria-label="Cerrar panel">✕</button>
+      </div>
+
+      <!-- Los campos los crea cliente.js a partir de las columnas que devuelva clientes_practca. -->
+      <form id="form-perfil" hidden>
+        <div id="perfil-campos" class="perfil-campos"></div>
+        <button type="submit">Guardar cambios</button>
+      </form>
+    </aside>
+
+    <script src="js/supabaseClient.js"></script>
+    <script src="js/cliente.js"></script>
+  </body>
+</html>

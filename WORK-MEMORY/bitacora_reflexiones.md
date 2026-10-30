@@ -23,3 +23,11 @@ página carga su propia copia del array de `data.js`, así que sin algo que las 
 se quedan solo en esa pestaña. Aprendí a usar `localStorage` para que ambas páginas lean y escriban
 el mismo estado. También terminé de entender la diferencia entre "crear" (agregar al final del
 array) y "actualizar" (reemplazar por índice) armando el flujo de editar del CRUD.
+
+## 2026-10-30
+
+**Hasta aquí fue todo el proceso de login del proyecto** (`supabase-base/cliente.html`). Quedó
+armado el registro con `db.auth.signUp()` + insert del perfil en `clientes_practca` usando el
+mismo `id` de Auth, el inicio de sesión con `db.auth.signInWithPassword()`, los estilos modernos de
+la página (`css/client.css`) y el botón de modo claro/oscuro (`js/theme.js`). El nombre de la tabla
+en el código tiene que coincidir letra por letra con el de Supabase (`clientes_practca`).

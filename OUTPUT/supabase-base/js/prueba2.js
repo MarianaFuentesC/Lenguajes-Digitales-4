@@ -192,7 +192,7 @@ function llenarFormulario(p) {
   form.unidades.value = p.unidades;
   form.descuento.value = p.descuento;
   form.disponible.checked = p.disponible;
-  form.categoria.value = (p.categoria || []).join(', ');   // array → "Ropa, Hombre"
+  form.categoria.value = categoriasComoArray(p.categoria).join(', ');   // array → "Ropa, Hombre"
   form.image.value = p.image || '';
 }
 
@@ -302,6 +302,16 @@ function mostrarResultados(productos) {
   lista.innerHTML = productos.map(tarjetaProducto).join('');
 }
 
+// categoriasComoArray(): la tabla importada desde CSV guarda categoria
+// como TEXTO ("{Ropa,Hombre}"), no como array. Los strings no tienen
+// .map(), así que lo convertimos: quitamos { } y partimos por coma.
+// Si ya es array (después de correr el SQL), lo devolvemos tal cual.
+function categoriasComoArray(valor) {
+  if (Array.isArray(valor)) return valor;
+  if (typeof valor !== 'string') return [];
+  return valor.replace(/[{}"]/g, '').split(',').map(c => c.trim()).filter(c => c !== '');
+}
+
 // toLocaleString('es-CO') pone los puntos de miles: 189900 → "189.900"
 const formatoPrecio = n => '$' + Number(n).toLocaleString('es-CO');
 
@@ -317,7 +327,7 @@ function tarjetaProducto(p) {
       <div class="product-img">
         <img src="${imagen}" alt="${p.nombre}" loading="lazy">
         ${descuento > 0 ? `<span class="badge badge-discount">-${Math.round(descuento * 100)}%</span>` : ''}
-        <span class="badge badge-id">#${p.id}</span>
+        ${p.id != null ? `<span class="badge badge-id">#${p.id}</span>` : ''}
       </div>
       <div class="product-body">
         <h3>${p.nombre}</h3>
@@ -327,7 +337,7 @@ function tarjetaProducto(p) {
           ${descuento > 0 ? `<s>${formatoPrecio(p.precio)}</s>` : ''}
         </div>
         <div class="chips">
-          ${(p.categoria || []).map(c => `<span class="chip">${c}</span>`).join('')}
+          ${categoriasComoArray(p.categoria).map(c => `<span class="chip">${c}</span>`).join('')}
         </div>
         <span class="stock ${hayStock ? 'ok' : 'out'}">
           ${hayStock ? `● ${p.unidades} disponibles` : '● Agotado'}

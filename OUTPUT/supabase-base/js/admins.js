@@ -1,3 +1,186 @@
+// =========================================
+// ACCESO DE ADMINISTRADORES
+// =========================================
+
+// Muestra un mensaje en la tarjeta de acceso. "tipo" cambia el color
+// (ver .estado[data-tipo] en admins.css): 'info', 'ok' o 'error'.
+// Texto vacío = el mensaje se oculta (.estado:empty en el CSS).
+function mensajeAcceso(texto, tipo = 'info') {
+  const estado = document.getElementById('estado-sesion-admin');
+  estado.innerText = texto;
+  estado.dataset.tipo = tipo;
+}
+
+// Mientras esperamos a Supabase desactivamos el botón (para que no se
+// envíe dos veces) y cambiamos su texto por uno de "cargando".
+function botonCargando(boton, cargando, texto = 'Cargando…') {
+  boton.disabled = cargando;
+  if (cargando) {
+    boton.dataset.textoOriginal = boton.textContent;
+    boton.textContent = texto;
+  } else {
+    boton.textContent = boton.dataset.textoOriginal;
+  }
+}
+
+// ---- Pestañas "Iniciar sesión" / "Registrarme" ----
+// Cada pestaña tiene data-tab="login" o data-tab="registro"; mostramos
+// el formulario que corresponde y ocultamos el otro.
+function mostrarPestana(nombre) {
+  document.querySelectorAll('.tab').forEach(tab => {
+    const activa = tab.dataset.tab === nombre;
+    tab.classList.toggle('is-active', activa);
+    tab.setAttribute('aria-selected', activa);
+  });
+  document.getElementById('form-login-admin').hidden = nombre !== 'login';
+  document.getElementById('form-registro-admin').hidden = nombre !== 'registro';
+  mensajeAcceso('');   // al cambiar de pestaña limpiamos el mensaje anterior
+}
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => mostrarPestana(tab.dataset.tab));
+});
+
+// ---- REGISTRO ----
+document.getElementById('form-registro-admin').addEventListener('submit', async (evento) => {
+  evento.preventDefault();
+  const form = evento.target;
+  const boton = form.querySelector('button[type="submit"]');
+  const correo = form.elements['admin-registro-correo'].value.trim();
+
+  botonCargando(boton, true, 'Creando cuenta…');
+
+  const { data, error } = await db.auth.signUp({
+    email: correo,
+    password: form.elements['admin-registro-password'].value,
+  });
+
+  if (error) {
+    botonCargando(boton, false);
+    mensajeAcceso('Error al registrar: ' + error.message, 'error');
+    return;
+  }
+
+  const { error: errorPerfil } = await db.from('admins_practica').insert([{
+    id: data.user.id,
+    nombre: form.elements['admin-registro-nombre'].value.trim(),
+    correo: correo,
+  }]);
+
+  botonCargando(boton, false);
+
+  if (errorPerfil) {
+    mensajeAcceso('Cuenta creada, pero falló el perfil: ' + errorPerfil.message, 'error');
+    return;
+  }
+
+  form.reset();
+
+  // Si Supabase ya abrió sesión al registrarse (pasa cuando "Confirm
+  // email" está desactivado), entramos directo al panel.
+  if (data.session) {
+    mostrarEstadoSesionAdmin();
+    return;
+  }
+
+  // Si no, pasamos a la pestaña de login con el correo ya escrito.
+  mostrarPestana('login');
+  document.getElementById('admin-login-correo').value = correo;
+  mensajeAcceso('¡Cuenta creada! Ya puedes iniciar sesión.', 'ok');
+});
+
+// ---- LOGIN ----
+document.getElementById('form-login-admin').addEventListener('submit', async (evento) => {
+  evento.preventDefault();
+  const form = evento.target;
+  const boton = form.querySelector('button[type="submit"]');
+
+  botonCargando(boton, true, 'Ingresando…');
+
+  const { error } = await db.auth.signInWithPassword({
+    email: form.elements['admin-login-correo'].value,
+    password: form.elements['admin-login-password'].value,
+  });
+
+  botonCargando(boton, false);
+
+  if (error) {
+    mensajeAcceso('Error al iniciar sesión: ' + error.message, 'error');
+    return;
+  }
+
+  form.reset();
+  mensajeAcceso('');
+  mostrarEstadoSesionAdmin();
+});
+
+// Decide QUÉ se ve en la página según la sesión:
+//   - sin sesión             → zona de acceso con pestañas login/registro
+//   - sesión pero sin perfil → zona de acceso con "Acceso restringido"
+//   - sesión + perfil admin  → panel CRUD visible, zona de acceso oculta
+async function mostrarEstadoSesionAdmin() {
+  const cargando = document.getElementById('cargando-sesion');
+  const zonaAcceso = document.getElementById('zona-acceso-admin');
+  const authArea = document.getElementById('auth-area');
+  const sinPerfil = document.getElementById('sin-perfil');
+  const panel = document.getElementById('panel-admin');
+
+  // Empezamos SIEMPRE ocultando el CRUD: solo se muestra si al final
+  // todo se confirma. Así, ante cualquier error, queda oculto.
+  panel.hidden = true;
+
+  const { data } = await db.auth.getUser();
+
+  cargando.hidden = true;     // ya tenemos respuesta: quitamos el cargador
+  zonaAcceso.hidden = false;
+
+  if (!data.user) {
+    authArea.hidden = false;
+    sinPerfil.hidden = true;
+    return;
+  }
+
+  // Importante: tener sesión no basta — confirmamos que además exista
+  // su fila en admins_practica. maybeSingle() devuelve null (sin error)
+  // si no hay fila.
+  const { data: perfil } = await db
+    .from('admins_practica')
+    .select('nombre')
+    .eq('id', data.user.id)
+    .maybeSingle();
+
+  if (!perfil) {
+    authArea.hidden = true;
+    sinPerfil.hidden = false;
+    mensajeAcceso('Sesión iniciada como ' + data.user.email + ', pero sin perfil de administrador.', 'error');
+    return;
+  }
+
+  // ✅ Admin confirmado: ponemos su nombre en la barra superior,
+  // escondemos la zona de acceso y mostramos el CRUD.
+  document.getElementById('admin-nombre').textContent = perfil.nombre;
+  document.getElementById('admin-inicial').textContent = perfil.nombre.charAt(0).toUpperCase();
+  zonaAcceso.hidden = true;
+  panel.hidden = false;
+  mostrarResultados(await traerTodos());      // y cargamos los productos
+}
+
+// ---- LOGOUT ----
+// Hay DOS botones de cerrar sesión (en la barra del panel y en
+// "Acceso restringido"), los dos con el atributo data-logout.
+// Como un id no se puede repetir, los buscamos por ese atributo.
+document.querySelectorAll('[data-logout]').forEach(boton => {
+  boton.addEventListener('click', async () => {
+    await db.auth.signOut();
+    salirModoEdicion();                                       // limpia el formulario
+    document.getElementById('search-results').innerHTML = ''; // borra la lista
+    await mostrarEstadoSesionAdmin();
+    mostrarPestana('login');
+    mensajeAcceso('Sesión cerrada. ¡Hasta pronto! 👋', 'ok');
+  });
+});
+
+
 document.getElementById('btn-traer').addEventListener('click', async () => {
 
   // "async" convierte esta función (el listener del clic) en una función
@@ -83,7 +266,7 @@ const precios = data.map(producto => producto.precio);
     //crud
 
     // productoPrueba es el MOLDE de referencia: el formulario de
-    // prueba2.html tiene un campo por cada una de estas propiedades,
+    // admins.html tiene un campo por cada una de estas propiedades,
     // y construimos un objeto con esta misma forma a partir de lo
     // que escriba el usuario (ver leerFormulario() más abajo).
     const productoPrueba = {
@@ -296,7 +479,7 @@ async function traerTodos() {
 function mostrarResultados(productos) {
   const lista = document.getElementById('search-results');
   if (productos.length === 0) {
-    lista.innerHTML = '<li class="empty">No se encontraron productos.</li>';
+    lista.innerHTML = '<li class="empty"><span>🔍</span>No se encontraron productos.</li>';
     return;
   }
   lista.innerHTML = productos.map(tarjetaProducto).join('');
@@ -408,5 +591,11 @@ document.getElementById('search-form').addEventListener('submit', async (evento)
   }
 });
 
-// Al abrir la página cargamos todos los productos (READ)
-traerTodos().then(mostrarResultados);
+// Al abrir la página revisamos si ya hay una sesión guardada (Supabase
+// la recuerda en el navegador). Si es un admin confirmado, se muestra el
+// CRUD y se cargan los productos; si no, queda oculto.
+// Va al FINAL del archivo para que todas las funciones y variables de
+// arriba (traerTodos, mostrarResultados, idEditando...) ya existan.
+mostrarEstadoSesionAdmin();
+
+

@@ -1,0 +1,799 @@
+/* =========================================
+   admins.css — estilos de admins.html
+   Los colores viven en variables (--nombre) para cambiarlos en un
+   solo lugar. El bloque :root[data-theme="dark"] las redefine en
+   modo noche (theme.js pone ese atributo en <html>).
+   ========================================= */
+
+/* El atributo "hidden" oculta elementos, pero una regla como
+   ".btn { display: flex }" le gana y los vuelve a mostrar.
+   !important asegura que hidden SIEMPRE oculte (panel admin,
+   formularios de login, botón cancelar...). */
+[hidden] { display: none !important; }
+
+:root {
+  --bg: #f6f5fc;
+  --surface: #ffffff;
+  --surface-2: #faf9ff;
+  --text: #1c1b2e;
+  --muted: #6e6c87;
+  --border: #e6e3f3;
+
+  --primary: #6c4cf5;
+  --primary-2: #b44cf5;           /* segundo color del degradado */
+  --accent: #ff6fa5;              /* rosado para detalles */
+  --primary-soft: #efeaff;
+
+  --danger: #e5484d;
+  --danger-soft: #fdecec;
+  --success: #12a06a;
+  --success-soft: #e3f7ee;
+
+  --gradient: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 55%, var(--accent) 100%);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow: 0 1px 2px rgba(40, 20, 90, 0.04), 0 8px 24px rgba(40, 20, 90, 0.07);
+  --shadow-lg: 0 20px 50px rgba(60, 30, 140, 0.18);
+  --ring: 0 0 0 4px rgba(108, 76, 245, 0.18);
+}
+
+/* Modo noche: antes dependía solo del sistema (@media prefers-color-scheme);
+   ahora lo decide el botón. theme.js ya usa la preferencia del sistema
+   como valor inicial si la persona nunca ha elegido. */
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0f0e17;
+    --surface: #1a1826;
+    --surface-2: #211f30;
+    --text: #efedf9;
+    --muted: #a19fba;
+    --border: #2e2b42;
+    --primary: #9b82ff;
+    --primary-2: #c77dff;
+    --accent: #ff85b3;
+    --primary-soft: #2a2447;
+    --danger: #ff6b70;
+    --danger-soft: #3a1f25;
+    --success: #4cd39a;
+    --success-soft: #16332a;
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.5);
+    --ring: 0 0 0 4px rgba(155, 130, 255, 0.25);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s ease, color 0.4s ease;   /* cambio de tema suave */
+}
+
+/* =========================================
+   INTERRUPTOR DÍA / NOCHE
+   Una "píldora" con un cielo de fondo y una perilla redonda que se
+   desliza. De día: cielo celeste, nubes y sol. De noche: cielo azul
+   oscuro, estrellas y luna.
+   ========================================= */
+.theme-toggle {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 50;
+  width: 76px;
+  height: 38px;
+  padding: 0;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 999px;
+  cursor: pointer;
+  overflow: hidden;
+  /* cielo de día */
+  background: linear-gradient(180deg, #5ec8ff 0%, #a6e3ff 100%);
+  box-shadow: 0 8px 24px rgba(40, 120, 200, 0.35), inset 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: background 0.5s ease, box-shadow 0.5s ease, transform 0.15s ease;
+}
+.theme-toggle:hover { transform: translateY(-2px) scale(1.04); }
+.theme-toggle:active { transform: scale(0.96); }
+.theme-toggle:focus-visible { outline: none; box-shadow: var(--ring), 0 8px 24px rgba(40, 120, 200, 0.35); }
+
+/* Decoración del cielo: nubes (de día) y estrellas (de noche),
+   dibujadas con degradados radiales: cada uno es un circulito. */
+.tt-cielo,
+.tt-cielo::after {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease, background-position 0.5s ease;
+}
+.tt-cielo {
+  /* nubes */
+  background:
+    radial-gradient(circle at 14px 26px, #fff 7px, transparent 7.5px),
+    radial-gradient(circle at 24px 24px, #fff 9px, transparent 9.5px),
+    radial-gradient(circle at 34px 28px, #fff 6px, transparent 6.5px);
+  background-repeat: no-repeat;    /* va DESPUÉS de "background:" porque ese atajo lo reinicia */
+  opacity: 0.95;
+}
+.tt-cielo::after {
+  content: "";
+  /* estrellas (al lado derecho, porque de noche la luna está a la izquierda) */
+  background:
+    radial-gradient(circle at 44px 10px, #fff 1.2px, transparent 1.7px),
+    radial-gradient(circle at 56px 22px, #fff 1px, transparent 1.5px),
+    radial-gradient(circle at 64px 9px, #fff 1.5px, transparent 2px),
+    radial-gradient(circle at 48px 27px, #fff 0.9px, transparent 1.4px),
+    radial-gradient(circle at 39px 19px, #fff 1px, transparent 1.5px);
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* Perilla: a la derecha de día (sol), se desliza a la izquierda de noche (luna) */
+.tt-perilla {
+  position: absolute;
+  top: 3px;
+  left: 41px;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffd43b;
+  color: #ff9f1c;
+  box-shadow: 0 0 0 4px rgba(255, 212, 59, 0.35), 0 0 18px rgba(255, 190, 40, 0.8);
+  transition: left 0.5s cubic-bezier(0.65, 0, 0.35, 1.25), background 0.5s ease, box-shadow 0.5s ease, color 0.5s ease;
+}
+.tt-perilla svg {
+  grid-area: 1 / 1;                /* los dos íconos en la misma celda, uno encima del otro */
+  width: 18px;
+  height: 18px;
+  transition: opacity 0.35s ease, transform 0.5s ease;
+}
+.tt-perilla .icon-moon { opacity: 0; transform: rotate(-90deg) scale(0.4); }
+
+/* ---- Estado NOCHE ---- */
+[data-theme="dark"] .theme-toggle {
+  background: linear-gradient(180deg, #1b1446 0%, #3a2a7a 100%);
+  border-color: rgba(180, 160, 255, 0.45);
+  box-shadow: 0 8px 24px rgba(80, 50, 200, 0.45), inset 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+[data-theme="dark"] .tt-cielo { background-position: 0 30px; }          /* las nubes bajan y desaparecen */
+[data-theme="dark"] .tt-cielo::after { opacity: 1; transform: translateY(0); }  /* aparecen las estrellas */
+[data-theme="dark"] .tt-perilla {
+  left: 3px;
+  background: #e9e4ff;
+  color: #8b7bd8;
+  box-shadow: 0 0 0 4px rgba(233, 228, 255, 0.18), 0 0 18px rgba(200, 190, 255, 0.6);
+}
+[data-theme="dark"] .tt-perilla .icon-sun  { opacity: 0; transform: rotate(90deg) scale(0.4); }
+[data-theme="dark"] .tt-perilla .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+
+h1, h2, h3, .brand {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
+h2 { margin: 0 0 1.1rem; font-size: 1.3rem; }
+.center { text-align: center; }
+
+/* Animación de entrada que reutilizamos en varias partes */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Cargador inicial ---------- */
+.loader {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1rem;
+  color: var(--muted);
+}
+.loader p { margin: 0; font-weight: 500; }
+
+.spinner {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 4px solid var(--primary-soft);
+  border-top-color: var(--primary);
+  animation: girar 0.8s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+
+/* =========================================
+   ZONA DE ACCESO (login / registro)
+   ========================================= */
+.acceso {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: center;
+  gap: 3rem;
+  padding: 3rem clamp(1rem, 5vw, 5rem);
+  position: relative;
+  overflow: hidden;
+  /* manchas de color difuminadas de fondo */
+  background:
+    radial-gradient(40rem 30rem at 0% 0%, rgba(108, 76, 245, 0.22), transparent 60%),
+    radial-gradient(35rem 28rem at 100% 100%, rgba(255, 111, 165, 0.20), transparent 60%),
+    radial-gradient(30rem 25rem at 60% 10%, rgba(180, 76, 245, 0.14), transparent 60%),
+    var(--bg);
+}
+
+@media (max-width: 860px) {
+  .acceso { grid-template-columns: 1fr; gap: 2rem; padding-block: 2rem; }
+}
+
+.acceso-intro { animation: aparecer 0.6s ease both; max-width: 520px; }
+
+.acceso-intro .brand {
+  display: inline-flex;
+  margin: 0 0 1.5rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.acceso-intro h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  line-height: 1.05;
+  font-weight: 800;
+}
+
+/* La palabra "administración" con el texto pintado en degradado */
+.acceso-intro h1 span {
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.acceso-texto { color: var(--muted); font-size: 1.05rem; margin: 0 0 1.5rem; }
+
+.acceso-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+.acceso-lista li {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border: 1px solid var(--border);
+  font-weight: 500;
+  font-size: 0.92rem;
+  backdrop-filter: blur(6px);
+}
+
+@media (max-width: 860px) {
+  .acceso-lista { display: none; }   /* en móvil vamos directo al login */
+}
+
+/* Tarjeta con efecto "vidrio" */
+.acceso-card {
+  width: 100%;
+  max-width: 440px;
+  justify-self: center;
+  padding: 2rem;
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(14px);
+  animation: aparecer 0.6s 0.1s ease both;
+}
+
+/* Pestañas */
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem;
+  padding: 0.3rem;
+  margin-bottom: 1.5rem;
+  border-radius: 14px;
+  background: var(--primary-soft);
+}
+
+.tab {
+  padding: 0.6rem;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.tab:hover { color: var(--primary); }
+.tab.is-active {
+  background: var(--surface);
+  color: var(--primary);
+  box-shadow: 0 2px 8px rgba(60, 30, 140, 0.12);
+}
+
+.auth-form { display: grid; gap: 0.4rem; animation: aparecer 0.35s ease both; }
+.auth-form h3, .sin-perfil h3 { margin: 0; font-size: 1.4rem; }
+.auth-sub { margin: 0 0 0.8rem; color: var(--muted); font-size: 0.92rem; }
+
+.auth-form label {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.auth-form .btn-block { margin-top: 1rem; }
+
+.sin-perfil { text-align: center; display: grid; gap: 0.3rem; }
+.sin-perfil-icono { font-size: 2.5rem; margin: 0; }
+
+/* Mensaje de estado: el color depende de data-tipo */
+.estado {
+  margin: 1.2rem 0 0;
+  padding: 0.75rem 0.95rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: var(--primary-soft);
+  color: var(--primary);
+  animation: aparecer 0.3s ease both;
+}
+.estado:empty { display: none; }
+.estado[data-tipo="ok"]    { background: var(--success-soft); color: var(--success); }
+.estado[data-tipo="error"] { background: var(--danger-soft);  color: var(--danger); }
+
+/* =========================================
+   PANEL ADMIN
+   ========================================= */
+#panel-admin { animation: aparecer 0.5s ease both; }
+
+/* ---------- Header con degradado ---------- */
+.header {
+  position: relative;
+  overflow: hidden;
+  background: var(--gradient);
+  color: #fff;
+  padding: 1rem clamp(1rem, 4vw, 2.5rem) 4.5rem;
+}
+
+/* círculos decorativos semitransparentes */
+.header::before,
+.header::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+}
+.header::before { width: 340px; height: 340px; top: -160px; right: -80px; }
+.header::after  { width: 220px; height: 220px; bottom: -120px; left: 8%; }
+
+.topbar {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.brand { margin: 0; font-size: 1.25rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
+
+.brand-tag {
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Pastilla con avatar + nombre del admin + cerrar sesión */
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0.35rem 0.3rem 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--primary);
+  font-weight: 800;
+}
+.user-name { font-weight: 600; font-size: 0.92rem; }
+
+.hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.hero h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
+  font-weight: 800;
+}
+
+.search {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 560px;
+}
+
+.search label { font-weight: 500; opacity: 0.9; font-size: 0.92rem; }
+
+.search-row {
+  display: flex;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 0.35rem;
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+}
+.search-row input { flex: 1; border: 0; background: transparent; }
+.search-row input:focus { box-shadow: none; }
+
+/* ---------- Layout de 2 columnas ---------- */
+.layout {
+  position: relative;
+  max-width: 1200px;
+  margin: -2.5rem auto 0;          /* sube sobre el header para dar profundidad */
+  padding: 0 1rem 2rem;
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* En pantallas angostas, una columna */
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+}
+
+.form-card { position: sticky; top: 1rem; overflow: hidden; }   /* overflow recorta la barra de color a las esquinas redondeadas */
+@media (max-width: 860px) { .form-card { position: static; } }
+
+/* barra de color arriba de la tarjeta del formulario */
+.form-card::before {
+  content: "";
+  display: block;
+  height: 5px;
+  margin: -1.5rem -1.5rem 1.4rem;
+  background: var(--gradient);
+}
+
+/* El título "Productos" queda sobre el header (fondo de color) */
+.products h2 {
+  color: #fff;
+  margin-top: 0.4rem;
+  text-shadow: 0 1px 8px rgba(40, 10, 90, 0.25);
+}
+/* En una columna el título ya no queda sobre el header: vuelve al color normal */
+@media (max-width: 860px) {
+  .products h2 { color: var(--text); text-shadow: none; }
+}
+
+/* ---------- Formulario ---------- */
+.product-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
+}
+
+.product-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.product-form .full { grid-column: 1 / -1; }
+
+.product-form .check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: end;
+  padding-bottom: 0.7rem;
+  color: var(--text);
+}
+
+.check input { width: 18px; height: 18px; accent-color: var(--primary); }
+
+input, textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+input::placeholder, textarea::placeholder { color: color-mix(in srgb, var(--muted) 70%, transparent); }
+
+textarea { resize: vertical; }
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: var(--surface);
+  box-shadow: var(--ring);
+}
+
+.actions { display: flex; gap: 0.5rem; }
+.actions .btn { flex: 1; }
+
+/* ---------- Botones ---------- */
+.btn {
+  padding: 0.7rem 1.15rem;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.12s, filter 0.15s, box-shadow 0.2s, background 0.15s;
+}
+
+.btn:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.btn:active { transform: translateY(0) scale(0.97); }
+.btn:focus-visible { outline: none; box-shadow: var(--ring); }
+.btn:disabled { opacity: 0.65; cursor: wait; transform: none; }
+
+.btn-primary {
+  background: var(--gradient);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(108, 76, 245, 0.35);
+}
+.btn-primary:hover { box-shadow: 0 10px 24px rgba(108, 76, 245, 0.45); }
+
+.btn-dark { background: #1c1b2e; color: #fff; }
+/* de noche el buscador es oscuro: el botón negro se perdería, usamos el degradado */
+[data-theme="dark"] .btn-dark { background: var(--gradient); }
+
+/* de noche el degradado del header es más profundo para que el texto blanco resalte */
+[data-theme="dark"] .header {
+  background: linear-gradient(135deg, #4a2fc9 0%, #7f2fc9 55%, #c63f7d 100%);
+}
+.btn-ghost { background: transparent; color: var(--primary); border-color: var(--primary); }
+.btn-ghost:hover { background: var(--primary-soft); }
+.btn-glass {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+}
+.btn-glass:hover { background: rgba(255, 255, 255, 0.3); }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-soft { background: var(--primary-soft); color: var(--primary); }
+.btn-soft-danger { background: var(--danger-soft); color: var(--danger); }
+.btn-sm { padding: 0.4rem 0.8rem; font-size: 0.84rem; }
+.btn-block { width: 100%; }
+
+/* Mensaje de respuesta del CRUD (vacío = oculto) */
+.respuesta {
+  margin: 1rem 0 0;
+  padding: 0.75rem 0.95rem;
+  border-radius: var(--radius-sm);
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  animation: aparecer 0.3s ease both;
+}
+.respuesta:empty { display: none; }
+
+/* ---------- Tarjetas de producto ---------- */
+.product-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.1rem;
+}
+
+.product {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  animation: aparecer 0.4s ease both;
+}
+
+.product:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+  box-shadow: var(--shadow-lg);
+}
+
+.product-img {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--primary-soft);
+  overflow: hidden;
+}
+
+.product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.product:hover .product-img img { transform: scale(1.06); }   /* zoom suave */
+
+.badge {
+  position: absolute;
+  top: 0.65rem;
+  padding: 0.22rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+}
+.badge-discount { left: 0.65rem; background: linear-gradient(135deg, var(--danger), var(--accent)); color: #fff; }
+.badge-id { right: 0.65rem; background: rgba(20, 15, 40, 0.55); color: #fff; }
+
+.product-body {
+  padding: 0.95rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex: 1;
+}
+
+.product-body h3 { margin: 0; font-size: 1.02rem; }
+
+.product-desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;            /* máximo 2 líneas, luego "…" */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.price { display: flex; align-items: baseline; gap: 0.5rem; }
+.price strong {
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-size: 1.2rem;
+  color: var(--primary);
+}
+.price s { color: var(--muted); font-size: 0.85rem; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.chip {
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.stock {
+  width: fit-content;
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+.stock.ok  { color: var(--success); background: var(--success-soft); }
+.stock.out { color: var(--danger);  background: var(--danger-soft); }
+
+.product-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: auto;               /* empuja los botones al fondo de la tarjeta */
+  padding-top: 0.6rem;
+}
+.product-actions .btn { flex: 1; }
+
+.confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  display: grid;
+  justify-items: center;
+  gap: 0.4rem;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--muted);
+  background: var(--surface);
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+}
+.empty span { font-size: 2rem; }
+
+/* ---------- Práctica (ejercicio de map) ---------- */
+.practice { max-width: 1168px; margin: 0 1rem 2.5rem; }
+@media (min-width: 1200px) { .practice { margin: 0 auto 2.5rem; } }
+
+.practice summary { cursor: pointer; font-weight: 700; color: var(--primary); }
+.practice .btn { margin-top: 1rem; }
+
+.practice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.practice pre {
+  max-height: 300px;
+  overflow: auto;
+  font-size: 0.8rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+.practice pre:empty { display: none; }
+
+/* Respeta a quien prefiere menos movimiento en su sistema */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Tienda — Panel de administración</title>
+
+  <!-- Fuentes desde Google Fonts: Inter para el texto y
+       Plus Jakarta Sans para los títulos -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admins.css">
+
+  <!-- theme.js va en el <head> (no al final) para aplicar el tema
+       guardado ANTES de pintar la página: así no hay "parpadeo".
+       Es el mismo archivo que usa cliente.html, así que la elección
+       de día/noche se comparte entre las dos páginas. -->
+  <script src="js/theme.js"></script>
+
+  <!-- CDN: trae la librería de Supabase ANTES que nuestros propios
+       scripts — sin esta línea, "supabase.createClient" no existiría
+       todavía cuando supabaseClient.js intente usarlo -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Interruptor día / noche. theme.js lo busca por id="theme-toggle"
+       y al hacer clic cambia data-theme en <html> ("light" o "dark").
+       El CSS mueve la perilla y cambia el cielo según ese atributo. -->
+  <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema">
+    <span class="tt-cielo" aria-hidden="true"></span>
+    <span class="tt-perilla" aria-hidden="true">
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4.5" fill="currentColor" />
+        <path d="M12 1.5v2M12 20.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M1.5 12h2M20.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4" />
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+      </svg>
+    </span>
+  </button>
+
+  <!-- Mientras admins.js pregunta a Supabase si ya hay sesión, mostramos
+       este cargador (así no "parpadea" el login si ya eras admin) -->
+  <div id="cargando-sesion" class="loader" role="status">
+    <span class="spinner"></span>
+    <p>Verificando sesión…</p>
+  </div>
+
+  <!-- ================= ZONA DE ACCESO ================= -->
+  <section id="zona-acceso-admin" class="acceso" hidden>
+
+    <!-- Lado izquierdo: presentación -->
+    <div class="acceso-intro">
+      <p class="brand">🛍️ Mi Tienda</p>
+      <h1>Panel de<br><span>administración</span></h1>
+      <p class="acceso-texto">Gestiona el catálogo de productos: crea, edita, busca y elimina, todo conectado a Supabase.</p>
+      <ul class="acceso-lista">
+        <li>✨ Crea productos en segundos</li>
+        <li>🔎 Busca por id o categoría</li>
+        <li>🔒 Solo para administradores</li>
+      </ul>
+    </div>
+
+    <!-- Lado derecho: tarjeta con login / registro -->
+    <div class="acceso-card">
+
+      <!-- auth-area: pestañas + formularios. Se oculta cuando ya hay sesión -->
+      <div id="auth-area">
+        <div class="tabs" role="tablist">
+          <button type="button" class="tab is-active" role="tab" aria-selected="true" data-tab="login">Iniciar sesión</button>
+          <button type="button" class="tab" role="tab" aria-selected="false" data-tab="registro">Registrarme</button>
+        </div>
+
+        <form id="form-login-admin" class="auth-form">
+          <h3>¡Hola de nuevo! 👋</h3>
+          <p class="auth-sub">Ingresa con tu cuenta de administrador.</p>
+
+          <label for="admin-login-correo">Correo</label>
+          <input id="admin-login-correo" type="email" placeholder="tu@correo.com" autocomplete="email" required>
+
+          <label for="admin-login-password">Contraseña</label>
+          <input id="admin-login-password" type="password" placeholder="••••••••" autocomplete="current-password" required>
+
+          <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+        </form>
+
+        <form id="form-registro-admin" class="auth-form" hidden>
+          <h3>Crea tu cuenta ✨</h3>
+          <p class="auth-sub">Registra un nuevo administrador de la tienda.</p>
+
+          <label for="admin-registro-nombre">Nombre</label>
+          <input id="admin-registro-nombre" type="text" placeholder="Tu nombre" autocomplete="name" required>
+
+          <label for="admin-registro-correo">Correo</label>
+          <input id="admin-registro-correo" type="email" placeholder="tu@correo.com" autocomplete="email" required>
+
+          <label for="admin-registro-password">Contraseña</label>
+          <input id="admin-registro-password" type="password" minlength="6" placeholder="Mínimo 6 caracteres" autocomplete="new-password" required>
+
+          <button type="submit" class="btn btn-primary btn-block">Crear cuenta de administrador</button>
+        </form>
+      </div>
+
+      <!-- sin-perfil: hay sesión, pero el usuario NO está en admins_practica -->
+      <div id="sin-perfil" class="sin-perfil" hidden>
+        <p class="sin-perfil-icono">🚫</p>
+        <h3>Acceso restringido</h3>
+        <p class="auth-sub">Tu cuenta no tiene permisos de administrador.</p>
+        <button type="button" class="btn btn-ghost btn-block" data-logout>Cerrar sesión</button>
+      </div>
+
+      <!-- Mensajes (errores, éxito...). data-tipo cambia el color -->
+      <p id="estado-sesion-admin" class="estado" role="status"></p>
+    </div>
+  </section>
+
+  <!-- ================= PANEL ADMIN (CRUD) =================
+       #panel-admin: TODO el CRUD vive aquí adentro. Empieza con "hidden"
+       (oculto) y admins.js solo lo muestra cuando confirma sesión iniciada
+       Y que existe la fila del usuario en admins_practica. -->
+  <div id="panel-admin" hidden>
+
+    <!-- Buscador: si escribes un número busca por id, si escribes
+         texto busca por categoría, vacío muestra todos -->
+    <header class="header">
+      <div class="topbar">
+        <p class="brand">🛍️ Mi Tienda <span class="brand-tag">Admin</span></p>
+        <div class="user-pill">
+          <span id="admin-inicial" class="avatar">A</span>
+          <span id="admin-nombre" class="user-name">Admin</span>
+          <button type="button" class="btn btn-glass btn-sm" data-logout>Cerrar sesión</button>
+        </div>
+      </div>
+
+      <div class="hero">
+        <h1>Gestiona tu catálogo</h1>
+        <form id="search-form" class="search">
+          <label for="input-search">Buscar por categoría o Id</label>
+          <div class="search-row">
+            <input type="search" id="input-search" placeholder="Ej: Ropa o 12">
+            <button type="submit" class="btn btn-dark">Buscar</button>
+          </div>
+        </form>
+      </div>
+    </header>
+
+    <main class="layout">
+
+      <!-- Columna izquierda: formulario crear / editar.
+           Cada campo tiene un "name" igual a una propiedad de productoPrueba
+           (admins.js), así en JS podemos leerlo con form.nombre, form.precio, etc. -->
+      <section class="card form-card">
+        <!-- id="form-title": admins.js cambia este texto a "Editar producto"
+             cuando el formulario está en modo edición -->
+        <h2 class="center" id="form-title">Crear producto</h2>
+
+        <form id="form-producto" class="product-form">
+          <!-- nombre: texto obligatorio -->
+          <label class="full">Nombre
+            <input type="text" name="nombre" required>
+          </label>
+
+          <!-- descripcion: texto largo, por eso usamos <textarea> -->
+          <label class="full">Descripción
+            <textarea name="descripcion" rows="3"></textarea>
+          </label>
+
+          <!-- precio: número; step="0.01" permite decimales -->
+          <label>Precio
+            <input type="number" name="precio" min="0" step="0.01" required>
+          </label>
+
+          <!-- unidades: número entero (step="1") -->
+          <label>Unidades
+            <input type="number" name="unidades" min="0" step="1" required>
+          </label>
+
+          <!-- descuento: decimal entre 0 y 1 (0.1 = 10%), igual que en productoPrueba -->
+          <label>Descuento (0 a 1)
+            <input type="number" name="descuento" min="0" max="1" step="0.01" value="0">
+          </label>
+
+          <!-- disponible: booleano → checkbox (marcado = true) -->
+          <label class="check">
+            <input type="checkbox" name="disponible" checked> Disponible
+          </label>
+
+          <!-- categoria: en la base es un array; aquí se escriben separadas por coma -->
+          <label class="full">Categorías (separadas por coma)
+            <input type="text" name="categoria" placeholder="Ropa, Hombre">
+          </label>
+
+          <!-- image: URL de la imagen del producto -->
+          <label class="full">URL de la imagen
+            <input type="url" name="image" placeholder="https://...">
+          </label>
+
+          <!-- type="submit": al hacer clic se dispara el evento "submit"
+               del formulario, que escuchamos en admins.js -->
+          <div class="actions full">
+            <button type="submit" id="btn-agregar-obj" class="btn btn-primary">Agregar producto</button>
+            <!-- Cancelar solo se ve en modo edición (hidden lo oculta) -->
+            <button type="button" id="btn-cancelar" class="btn btn-ghost" hidden>Cancelar</button>
+          </div>
+        </form>
+
+        <p id="respuesta" class="respuesta" role="status"></p>
+      </section>
+
+      <!-- Columna derecha: lista de productos (READ) -->
+      <section class="products">
+        <h2>Productos</h2>
+        <ul id="search-results" class="product-grid"></ul>
+      </section>
+    </main>
+
+    <!-- Ejercicio anterior (map de nombres, descripciones, precios).
+         Queda guardado en un <details> para no ocupar espacio. -->
+    <details class="card practice">
+      <summary>Práctica: Traer productos con map()</summary>
+      <button id="btn-traer" class="btn btn-ghost">Traer productos</button>
+      <div class="practice-grid">
+        <div id="resultado2"></div>
+        <div id="resultado3"></div>
+        <div id="resultado4"></div>
+      </div>
+      <pre id="resultado"></pre>
+    </details>
+
+  </div> <!-- ← cierre de #panel-admin -->
+
+  <!-- supabaseClient.js crea "db" (sección 4.3): el cliente ya
+       conectado a tu proyecto de Supabase. Lo vamos a usar en
+       admins.js, por eso tiene que cargarse ANTES que ese archivo -->
+  <script src="js/supabaseClient.js"></script>
+  <script src="js/admins.js"></script>
+</body>
+</html>
